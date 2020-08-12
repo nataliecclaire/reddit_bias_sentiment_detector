@@ -13,22 +13,20 @@ if __name__ == '__main__':
 
     data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/'
 
-    harassment_df = pd.read_csv(data_path + 'Online Harassment Dataset/onlineHarassmentDataset_Golbeck.csv', index_col=0, encoding='latin-1')
+    hate_df = pd.read_csv(data_path + 'Online Harassment Dataset/hate_offensive_davidson.csv', index_col=0, encoding='latin-1')
     # harassment_df = harassment_df.sample(10)
 
     # harassment_df = harassment_df.dropna(how='all', axis='columns')
-    harassment_df = harassment_df.loc[:, ~harassment_df.columns.str.contains('^Unnamed')]
+    hate_df = hate_df.loc[:, ~hate_df.columns.str.contains('^Unnamed')]
 
-    labels = {'N': 0, 'H': 1}
-    harassment_df['code_label'] = harassment_df['Code'].map(labels)
-    harassment_df['tweet_processed'] = harassment_df['Tweet'].apply(lambda x: hf.process_tweet(x))
+    hate_df['tweet_processed'] = hate_df['tweet'].apply(lambda x: hf.process_tweet(x))
 
-    print(harassment_df.head(10))
+    print(hate_df.head(10))
 
-    print(pd.Series(harassment_df['tweet_processed']).str.split(' ').str.len().describe())
+    print(pd.Series(hate_df['tweet_processed']).str.split(' ').str.len().describe())
 
-    raw_tweets = harassment_df.Tweet.values
-    processed_tweets = harassment_df.tweet_processed.values
+    raw_tweets = hate_df.tweet.values
+    processed_tweets = hate_df.tweet_processed.values
 
     raw_tweet_2 = []
     for sen in raw_tweets:
@@ -66,6 +64,6 @@ if __name__ == '__main__':
     # print('Max raw: {}'.format(len([sen for sen in raw_tweets if len(sen.split()) < 120])))
     # print('Max processed: {}'.format(len([sen for sen in processed_tweets if len(sen.split()) < 120])))
     '''
-    harassment_df.to_csv(data_path + 'Online Harassment Dataset/HarassmentDatasetFull_Golbeck_processed.csv')
+    hate_df.to_csv(data_path + 'Online Harassment Dataset/hate_offensive_davidson_processed.csv')
 
     print('Time taken for code execution: {}'.format((time.time() - start)/60))

@@ -64,20 +64,9 @@ def get_reddit_comments(qd):
                 print('Exception observed: {}'.format(repr(e)))
 
 
-
 if __name__ == '__main__':
 
     start = time.time()
-    # query_demo = ['"Women are"', '"Women should"', '"Mothers are"', '"His daughter is"']
-    # query_feature = ['adoption', 'adoptive', 'birth', 'bride', 'care-giver', 'child', 'childhood', 'children', 'clan',
-    #                  'cousin', 'devoted', 'divorce', 'engaged', 'engagement', 'estranged', 'faithful', 'family',
-    #                  'fiancee',
-    #                  'folks', 'foster', 'helpmate', 'heritage', 'household', 'in-law', 'infancy', 'infant', 'inherit',
-    #                  'inheritance', 'kin', 'kindred', 'kinfolk', 'kinship', 'kith', 'lineage', 'love', 'marry',
-    #                  'marriage',
-    #                  'mate', 'maternal', 'matrimony', 'natal', 'newlywed', 'nuptial', 'offspring', 'orphan',
-    #                  'parent relative',
-    #                  'separation', 'sibling', 'spouse', 'tribe', 'triplets', 'twins', 'wed', 'wedding', 'wedlock']
 
     data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/'
     demo = 'religion2' # 'race' #'gender' # 'religion'
