@@ -5,22 +5,7 @@ import time
 import re
 import multiprocessing as mp
 from collections import defaultdict
-
-
-def get_pushshift_data(query, after, before, sub):
-    url = 'https://api.pushshift.io/reddit/search/submission/?title='+str(query)+'&size=1000&after='+str(after)+'&before='+str(before)+'&subreddit='+str(sub)
-    print(url)
-    r = requests.get(url)
-    data = json.loads(r.text)
-    return data['data']
-
-
-def get_pushshift_comments(q1, q2, s, b, a):
-    url = 'https://api.pushshift.io/reddit/search/comment/?q='+str(q1)+'+'+str(q2)+'&size='+str(s)+'&after='+str(a)+'&before='+str(b)
-    print(url)
-    r = requests.get(url)
-    data = json.loads(r.text)
-    return data['data']
+from utils import reddit_helpers as rh
 
 
 # sub='PS4'
@@ -38,7 +23,7 @@ def get_reddit_comments(qd):
         for c in range(chunks):
             try:
                 after = before - (60 * 60 * 24 * 30)
-                red_comments = get_pushshift_comments(qd, qf, size, before, after)
+                red_comments = rh.get_pushshift_comments(qd, qf, size, before, after)
                 # print(red_comments)
                 # print(len(red_comments))
                 time.sleep(5)
@@ -58,7 +43,6 @@ def get_reddit_comments(qd):
                         #     comments_dict["comments"] = com['body']
 
                         # comments_dict.setdefault("comments", []).append(com['body'])
-
                 before = after
             except Exception as e:
                 print('Exception observed: {}'.format(repr(e)))
@@ -69,13 +53,13 @@ if __name__ == '__main__':
     start = time.time()
 
     data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/'
-    demo = 'religion2' # 'race' #'gender' # 'religion'
-    demo_1 = 'muslims' # 'jews' # 'black' #'female' # 'jews'
+    demo = 'race' # 'religion2' # 'race' #'gender' # 'religion'
+    demo_1 = 'black_pos' # 'muslims' # 'jews' # 'black' #'female' # 'jews'
 
-    with open(data_path + demo + '_' + demo_1 + '.txt') as f:
+    with open(data_path + demo + '/' + demo + '_' + demo_1 + '.txt') as f:
         query_feature = [line.split('\n')[0] for line in f]
 
-    with open(data_path + demo + '_opposites.txt') as f:
+    with open(data_path + demo + '/' + demo + '_opposites.txt') as f:
         query_demo = [line.split(',')[0] for line in f]
 
     print(query_demo)
@@ -99,6 +83,7 @@ if __name__ == '__main__':
 
         # print(comments_dict)
         # comments_dict = dict(comments_dict)
+        # print('Comments dict chunk is:')
         # print(comments_dict)
 
         comments_df = pd.DataFrame(list(comments_dict.items()), columns=['id', 'comments'])

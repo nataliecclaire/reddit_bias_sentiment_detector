@@ -1,57 +1,14 @@
 import pandas as pd
 import re
-
-
-def process_tweet(sent):
-    # special cases - 15959
-    # print(sent)
-    sent = sent.encode("ascii", errors="ignore").decode() # check this output
-    # print(sent)
-    sent = re.sub('@[^\s]+', '', sent)
-    sent = re.sub('https: / /t.co /[^\s]+', '', sent)
-    sent = re.sub('http: / /t.co /[^\s]+', '', sent)
-    sent = re.sub('http[^\s]+', '', sent)
-
-    sent = re.sub('&gt', '', sent)
-
-    # split camel case combined words
-    sent = re.sub('([A-Z][a-z]+)', r'\1', re.sub('([A-Z]+)', r' \1', sent))
-
-    sent = sent.lower()
-
-    # remove numbers
-    sent = re.sub(' \d+', '', sent)
-    # remove words with letter+number
-    sent = re.sub('\w+\d+|\d+\w+', '', sent)
-
-    # remove spaces
-    sent = re.sub('[\s]+', ' ', sent)
-    sent = re.sub('[^\w\s.!\-?]', '', sent)
-
-    # remove 2 or more repeated char
-    sent = re.sub(r"(.)\1{2,}", r"\1", sent)
-    sent = re.sub(" rt ", "", sent)
-
-    sent = re.sub('- ', '', sent)
-
-    sent = sent.strip()
-
-    # print(sent)
-    return sent
-
-
-def process_reddit(comment):
-    comment = comment.encode("ascii", errors="ignore").decode()
-    comment = re.sub('[^A-Za-z,. ]+', '', comment)
-    return comment
+from utils import reddit_helpers as rh
 
 
 if __name__ == '__main__':
 
     data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/'
-    demo = 'religion2' # 'gender' #  # 'race'  # 'race' #'gender' # 'religion'
-    demo_1 = 'muslims' # 'female' #  # 'jews' # 'black'  # 'jews' # 'black' #'female' # 'jews'
-    demo_2 = 'christians' # 'male' #  # 'white'
+    demo = 'race' # 'religion2' # 'gender' #  # 'race'  # 'race' #'gender' # 'religion'
+    demo_1 = 'black_pos' # 'muslims' # 'female' #  # 'jews' # 'black'  # 'jews' # 'black' #'female' # 'jews'
+    demo_2 = 'white_pos' # 'christians' # 'male' #  # 'white'
     PROCESS_DEMO1 = True
 
     if PROCESS_DEMO1:
@@ -66,7 +23,7 @@ if __name__ == '__main__':
 
             demo1_df = demo1_df.dropna()
 
-            demo1_df['comments_processed'] = demo1_df['comments'].apply(lambda x: process_tweet(x))
+            demo1_df['comments_processed'] = demo1_df['comments'].apply(lambda x: rh.process_tweet(x))
             print('Before length filter {}'.format(demo1_df.shape))
             demo1_df = demo1_df[demo1_df['comments_processed'].str.len() < 150]
             # pd.concat([demo1_df_processed, demo1_df])
@@ -76,7 +33,8 @@ if __name__ == '__main__':
 
         demo1_df_processed = pd.concat(df_list, ignore_index=True)
         print(demo1_df_processed.shape)
-        demo1_df = demo1_df.dropna()
+        demo1_df_processed = demo1_df_processed.dropna()
+        demo1_df_processed = demo1_df_processed[demo1_df_processed['comments_processed'] != 'nan']
         print('After dropping nan {}'.format(demo1_df_processed.shape))
 
         demo1_df_processed.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + '_processed' + '.csv', index=False)
@@ -84,18 +42,6 @@ if __name__ == '__main__':
         print('Reading processed demo1 reddit files...')
         demo1_df_processed = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + '_processed' + '.csv')
         print('Shape of demo1 data {}'.format(demo1_df_processed.shape))
-
-    '''
-    ethnicity_pairs = {}
-    with open(data_path + 'religion_opposites_jc.txt') as f:
-        for line in f:
-            (key, val) = line.split(',')
-            key = key.replace('"', '').replace('\n', '')
-            val = val.replace('"', '').replace('\n', '')
-            ethnicity_pairs[key] = val
-    
-    print(len(ethnicity_pairs))
-    '''
 
     if demo == 'gender':
         colNames = ('id', 'comments_processed')
@@ -118,22 +64,26 @@ if __name__ == '__main__':
 
     demo2_df = pd.DataFrame(columns=['initial_demo', 'replaced_demo', 'comments', 'comments_processed'])
 
-    # pairs = (('black', 'white'), ('african american', 'anglo american'), ('african-american', 'anglo-american'),
-    #          ('afro-american', 'anglo-american'), ('african', 'american'), ('afroamericans', 'angloamericans'), ('negroes', 'caucasians'), ('dark-skin', 'light-skin'),
-    #          ('dark skin', 'light skin'))
-
-    # pairs = (('jew ', 'christian '), ('jewish', 'christian'), ('jews ', 'christians '), ('judaism', 'christianity'))
-
-    pairs = (('muslim', 'christian'), ('islamic', 'christian'), ('islam ', 'christianity '), ('arabs', 'americans'), ('islamism', 'christianity'))
-
-    # pairs = (('woman', 'man'), ('women', 'men'), ('girl', 'boy'), ('mother', 'father'), ('daughter', 'son'), ('wife', 'husband'),
-    #          ('niece', 'nephew'), ('mom', 'dad'), ('bride', 'groom'), ('lady', 'gentleman'), ('madam', 'sir'), ('hostess', 'host'),
-    #          ('female', 'male'), ('wife', 'husband'), ('aunt', 'uncle'), ('sister', 'brother'), (' she ', ' he '))
+    if demo == 'race':
+        pairs = (('black', 'white'), ('african american', 'anglo american'), ('african-american', 'anglo-american'),
+                 ('afro-american', 'anglo-american'), ('african', 'american'), ('afroamericans', 'angloamericans'),
+                 ('negroes', 'caucasians'), ('dark-skin', 'light-skin'), ('dark skin', 'light skin'))
+    elif demo == 'religion1':
+        pairs = (('jew ', 'christian '), ('jewish', 'christian'), ('jews ', 'christians '), ('judaism', 'christianity'))
+    elif demo == 'religion2':
+        pairs = (('muslim', 'christian'), ('islamic', 'christian'), ('islam ', 'christianity '), ('arabs', 'americans'), ('islamism', 'christianity'))
+    elif demo == 'gender':
+        pairs = (('woman', 'man'), ('women', 'men'), ('girl', 'boy'), ('mother', 'father'), ('daughter', 'son'), ('wife', 'husband'),
+                 ('niece', 'nephew'), ('mom', 'dad'), ('bride', 'groom'), ('lady', 'gentleman'), ('madam', 'sir'), ('hostess', 'host'),
+                 ('female', 'male'), ('wife', 'husband'), ('aunt', 'uncle'), ('sister', 'brother'), (' she ', ' he '))
+    else:
+        pairs = ()
 
     for idx, row in demo1_df_processed.iterrows():
         initial_demo = []
         replaced_demo = []
         s = row['comments_processed']
+        print(s)
         demo2_df.at[idx, 'comments'] = s
 
         for p in pairs:

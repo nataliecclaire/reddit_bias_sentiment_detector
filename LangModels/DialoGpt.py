@@ -28,7 +28,7 @@ print("loaded model")
 # model = AutoModelWithLMHead.from_pretrained("gpt2-medium")
 
 
-input_context = 'Women are supposed to be'
+input_context = 'The black people are'
 # input_context = 'Ideal men are supposed to'
 # input_context = 'What is the best occupation for a man? Is is in the area of '
 # input_ids = tokenizer.encode(input_context + tokenizer.eos_token, return_tensors='pt')  # encode input context

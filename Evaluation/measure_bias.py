@@ -26,11 +26,14 @@ data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Da
 exp_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Experiments/execution_logs/'
 
 GET_PERPLEXITY = False
-demo = 'gender' # 'religion2' # 'race' #'orientation' ## 'religion' # # #
-demo_1 = 'female' # 'muslims' # 'black' # 'lgbtq'# #'muslims'
-demo_2 = 'male' # 'christians' # 'white' #'straight'# #'christians2'
+demo = 'religion1' # 'religion2' # 'gender' # 'race' # 'race' #'orientation'  #
+demo_1 = 'jews' # 'muslims' # 'female' # 'black' # 'black_pos' # 'muslims' #  # 'lgbtq'
+demo_2 = 'christians' # 'male' # 'white' # 'white_pos'  # 'white' #'straight'# #'christians2'
 
 logging.basicConfig(filename=exp_path+'measure_bias'+demo+'.log', filemode='w', level=logging.DEBUG, format='%(asctime)s %(message)s')
+
+pd.set_option('max_colwidth', 600)
+pd.options.display.max_columns = 10
 
 if GET_PERPLEXITY:
 
@@ -80,9 +83,24 @@ race_2_p = []
 logging.info('Filtering out perplexities more than 5000')
 
 for p1, p2 in zip(race_1_perplexity, race_2_perplexity):
-    if 0 < p1 < 5000 and 0 < p2 < 5000:
+    if 0 < p1 < 1000 and 0 < p2 < 1000:
         race_1_p.append(p1)
         race_2_p.append(p2)
+
+
+race_df = race_df.loc[:, ~race_df.columns.str.contains('^Unnamed')]
+race_df_2 = race_df_2.loc[:, ~race_df_2.columns.str.contains('^Unnamed')]
+
+# df_merged = pd.merge(race_df, race_df_2, left_index=True, right_index=True)
+#
+# df_merged = df_merged[(df_merged.perplexity_x < 1000) & (df_merged.perplexity_y < 1000)]
+#
+# df_merged = df_merged.drop(columns=['comments_x', 'comments_y'])
+# df_merged['diff_perplexity'] = df_merged['perplexity_x'].values - df_merged['perplexity_y'].values
+# print(df_merged.head())
+# print(df_merged.shape)
+#
+# df_merged.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + demo_1 + '_diff_reduced.csv', index=False)
 
 '''
 sns.distplot(race_1_p, hist=True, kde=True)
@@ -99,11 +117,11 @@ logging.info('Saving perplexity difference for each pair of sentence')
 
 dif = np.array(race_1_perplexity) - np.array(race_2_perplexity)
 
-race_diff = pd.DataFrame()
-race_diff['comments_1'] = race_df['comments_processed']
-race_diff['comments_2'] = race_df_2['comments_processed']
-race_diff['diff_perplex'] = dif
-race_diff.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_diff.csv')
+# race_diff = pd.DataFrame()
+# race_diff['comments_1'] = race_df['comments_processed']
+# race_diff['comments_2'] = race_df_2['comments_processed']
+# race_diff['diff_perplex'] = dif
+# race_diff.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + demo_1 + '_diff.csv')
 
 logging.debug('Mean and variance of filtered perplexities demo1 - Mean {}, Variance {}'.format(np.mean(race_1_p), np.var(race_1_p)))
 logging.debug('Mean and variance of filtered perplexities demo2 - Mean {}, Variance {}'.format(np.mean(race_2_p), np.var(race_2_p)))
