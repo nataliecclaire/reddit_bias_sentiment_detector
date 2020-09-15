@@ -6,11 +6,11 @@ from utils import helper_functions as helpers
 torch.manual_seed(0)
 pretrained_model = 'microsoft/DialoGPT-small' # 'gpt2'
 
-tokenizer = AutoTokenizer.from_pretrained('/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/model_bias_pos_sent/')
-model = AutoModelWithLMHead.from_pretrained('/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/model_bias_pos_sent/')
+# tokenizer = AutoTokenizer.from_pretrained('/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/model_bias_pos_sent/')
+# model = AutoModelWithLMHead.from_pretrained('/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/model_bias_pos_sent/')
 
-# tokenizer = AutoTokenizer.from_pretrained('/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/model_bias_pos_ep5/')
-# model = AutoModelWithLMHead.from_pretrained('/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/model_bias_pos_ep5/')
+tokenizer = AutoTokenizer.from_pretrained('/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/model_bias_pos_ep5/')
+model = AutoModelWithLMHead.from_pretrained('/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/model_bias_pos_ep5/')
 
 # tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
 # model = AutoModelWithLMHead.from_pretrained(pretrained_model)
@@ -34,7 +34,8 @@ perplexity4 = helpers.score(sent4, model, tokenizer)
 
 print(perplexity, perplexity0, perplexity2, perplexity3, perplexity4)
 
-input_context = ['black people are', 'unbiasannot black people are', 'biasannot black people are']
+# input_context = ['black people are', 'unbiasannot black people are', 'biasannot black people are']
+input_context = ['african people are', 'unbiasannot african people are', 'biasannot african people are']
 
 
 for ic in input_context:

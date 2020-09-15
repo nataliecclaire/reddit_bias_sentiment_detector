@@ -20,21 +20,37 @@ def get_perplexity_list(df, m, t):
     return perplexity_list
 
 
+def get_perplexity_list_test(df, m, t, dem):
+    perplexity_list = []
+    for idx, row in df.iterrows():
+        try:
+            if dem == 'black':
+                perplexity = helpers.score(row['comments_1'], m, t)
+            else:
+                perplexity = helpers.score(row['comments_2'], m, t)
+        except Exception as ex:
+            perplexity = 0
+        perplexity_list.append(perplexity)
+    return perplexity_list
+
+
 start = time.time()
 
 data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/'
 exp_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Experiments/execution_logs/'
 
+ON_TESTSET = False
 GET_PERPLEXITY = False
-demo = 'religion1' # 'religion2' # 'gender' # 'race' # 'race' #'orientation'  #
-demo_1 = 'jews' # 'muslims' # 'female' # 'black' # 'black_pos' # 'muslims' #  # 'lgbtq'
-demo_2 = 'christians' # 'male' # 'white' # 'white_pos'  # 'white' #'straight'# #'christians2'
+demo = 'race' # 'religion1' # 'religion2' # 'gender' # 'race' #'orientation'  #
+demo_1 = 'black' # 'jews' # 'muslims' # 'female' # 'black_pos' # 'muslims' #  # 'lgbtq'
+demo_2 = 'white' # 'christians' # 'male' # 'white_pos'  # 'white' #'straight'# #'christians2'
 
-logging.basicConfig(filename=exp_path+'measure_bias'+demo+'.log', filemode='w', level=logging.DEBUG, format='%(asctime)s %(message)s')
+logging.basicConfig(filename=exp_path+'measure_bias'+demo+'_test.log', filemode='w', level=logging.DEBUG, format='%(asctime)s %(message)s')
 
 pd.set_option('max_colwidth', 600)
 pd.options.display.max_columns = 10
 
+'''
 if GET_PERPLEXITY:
 
     logging.info('Calculating perplexity')
@@ -43,8 +59,9 @@ if GET_PERPLEXITY:
 
     # race_df = race_df.dropna()
     # race_df_2 = race_df_2.dropna()
-    pretrained_model = 'microsoft/DialoGPT-small' #'ctrl'
+    # pretrained_model = 'microsoft/DialoGPT-small' #'ctrl'
     # "microsoft/DialoGPT-small" # 'ctrl' # 'openai-gpt' # 'gpt2' # 'minimaxir/reddit' # 'xlnet-large-cased'
+    pretrained_model = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/model_target2/'
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
     model = AutoModelWithLMHead.from_pretrained(pretrained_model)
 
@@ -68,6 +85,36 @@ else:
     race_df_2 = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_2 + '_perplex.csv')
     race_1_perplexity = race_df['perplexity']
     race_2_perplexity = race_df_2['perplexity']
+'''
+
+if ON_TESTSET:
+    logging.info('Calculating perplexity')
+    race_df = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_diff_test' + '.csv')
+
+    # pretrained_model = 'microsoft/DialoGPT-small' #'ctrl'
+    # "microsoft/DialoGPT-small" # 'ctrl' # 'openai-gpt' # 'gpt2' # 'minimaxir/reddit' # 'xlnet-large-cased'
+    pretrained_model = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/model_target2/'
+    tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
+    model = AutoModelWithLMHead.from_pretrained(pretrained_model)
+
+    # race_df['comments_processed'] = race_df['comments_processed'].apply(lambda x: x.lower())
+    # print(race_df.head())
+
+    race_1_perplexity = get_perplexity_list_test(race_df, model, tokenizer, 'black')
+    print('Done with demo1 perplexity in {}'.format((time.time() - start) / 60))
+    race_2_perplexity = get_perplexity_list_test(race_df, model, tokenizer, 'white')
+
+    logging.info('Time to get perplexity scores {}'.format((time.time() - start) / 60))
+    race_df['perplexity_1'] = race_1_perplexity
+    race_df['perplexity_2'] = race_2_perplexity
+
+    race_df.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + '_perplex_test.csv', index=False)
+else:
+    logging.info('Getting saved perplexity')
+
+    race_df = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + '_perplex_test.csv')
+    race_1_perplexity = race_df['perplexity_1']
+    race_2_perplexity = race_df['perplexity_2']
 
 logging.debug('Instances in demo 1 and 2: {}, {}'.format(len(race_1_perplexity), len(race_2_perplexity)))
 logging.debug('Mean and variance of unfiltered perplexities demo1 - Mean {}, Variance {}'.format(np.mean(race_1_perplexity), np.var(race_1_perplexity)))
@@ -77,19 +124,23 @@ logging.debug('Mean and variance of unfiltered perplexities demo2 - Mean {}, Var
 # sns.distplot(race_2_perplexity, hist=True, kde=True)
 # plt.show()
 
+assert len(race_1_perplexity) == len(race_2_perplexity)
+
 race_1_p = []
 race_2_p = []
 
 logging.info('Filtering out perplexities more than 5000')
 
 for p1, p2 in zip(race_1_perplexity, race_2_perplexity):
-    if 0 < p1 < 1000 and 0 < p2 < 1000:
+    if 0 < p1 < 1500 and 0 < p2 < 1500:
         race_1_p.append(p1)
         race_2_p.append(p2)
 
 
 race_df = race_df.loc[:, ~race_df.columns.str.contains('^Unnamed')]
+'''
 race_df_2 = race_df_2.loc[:, ~race_df_2.columns.str.contains('^Unnamed')]
+'''
 
 # df_merged = pd.merge(race_df, race_df_2, left_index=True, right_index=True)
 #
@@ -134,7 +185,7 @@ print(t_value, p_value)
 print(len(race_1_p), len(race_2_p))
 
 t_vt, p_vt = stats.ttest_ind(race_1_p, race_2_p,)
-logging.info('Filtered perplexities - T value {} and P value {}'.format(t_vt, t_vt))
+logging.info('Filtered perplexities - T value {} and P value {}'.format(t_vt, p_vt))
 print(t_vt, p_vt)
 
 t_vf, p_vf = stats.ttest_ind(race_1_p, race_2_p, equal_var=False)
