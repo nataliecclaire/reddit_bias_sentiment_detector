@@ -9,7 +9,7 @@ if __name__ == '__main__':
     demo = 'race' # 'religion2' # 'gender' #  # 'race'  # 'race' #'gender' # 'religion'
     demo_1 = 'black_pos' # 'muslims' # 'female' #  # 'jews' # 'black'  # 'jews' # 'black' #'female' # 'jews'
     demo_2 = 'white_pos' # 'christians' # 'male' #  # 'white'
-    PROCESS_DEMO1 = True
+    PROCESS_DEMO1 = False
 
     if PROCESS_DEMO1:
         print('Processing demo1 reddit files...')

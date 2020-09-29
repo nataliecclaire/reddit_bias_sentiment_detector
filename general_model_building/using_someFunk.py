@@ -29,6 +29,7 @@ import numpy as np
 import collections
 import time
 from joblib import dump
+from math import sqrt
 import warnings
 
 # import statsmodels.api as sm
@@ -55,11 +56,12 @@ df_labels = df_labels['diff_perplex']
 data = df_features.join(df_labels)
 print(data.shape)
 
-data = data[(data['diff_perplex'] < 300) & (data['diff_perplex'] > -300)]
+data = data[(data['diff_perplex'] < 5000) & (data['diff_perplex'] > -5000)]
 print('After filtering diff perplexity {}'.format(data.shape))
 
 X = data.drop('diff_perplex', axis=1)
 y = data['diff_perplex']
+print('Mean and Std of perplexity diff: {}, {}'.format(np.mean(y), sqrt(np.var(y))))
 
 train_features, test_features, train_target, test_target = train_test_split(X, y, test_size=0.33, random_state=42)
 

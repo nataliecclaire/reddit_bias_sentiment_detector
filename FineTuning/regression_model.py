@@ -57,7 +57,7 @@ print('After filtering diff perplexity {}'.format(data.shape))
 
 X = data.drop('diff_perplex', axis=1)
 
-X = X.iloc[:, [768, 1537]]
+# X = X.iloc[:, [768, 1537]]
 print(X.head())
 y = data['diff_perplex']
 
@@ -74,7 +74,7 @@ print(y_tensor)
 x, y = Variable(X_tensor), Variable(y_tensor)
 
 net = torch.nn.Sequential(
-        torch.nn.Linear(2, 800),
+        torch.nn.Linear(1538, 800),
         torch.nn.LeakyReLU(),
         torch.nn.Linear(800, 400),
         torch.nn.LeakyReLU(),

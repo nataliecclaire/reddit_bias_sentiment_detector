@@ -76,6 +76,12 @@ class ModelArguments:
     cache_dir: Optional[str] = field(
         default=None, metadata={"help": "Where do you want to store the pretrained models downloaded from s3"}
     )
+    force_pad_token: bool = field(
+        default=False,
+        metadata={
+            "help": "Whether to force the addition of a padding token to tokenizer that does not already have one."
+        },
+    )
 
 
 @dataclass
@@ -201,6 +207,16 @@ def main():
             "You are instantiating a new tokenizer from scratch. This is not supported, but you can do it from another script, save it,"
             "and load it from here, using --tokenizer_name"
         )
+    if tokenizer.pad_token_id is None:
+        if model_args.force_pad_token:
+            # See PR 3388. Some tokenizers don't had pad tokens which causes errors at the encoding step in the collate_fn.
+            # We give here the option to force the addition of a pad token. The attention mask is used to ignore this token
+            # when feeding to the model.
+            tokenizer.add_special_tokens({"pad_token": "<pad>"})
+        else:
+            logger.warning(
+                "Attempting to train a model whose tokenizer has no padding token. This may result in errors in the encoding step. Set the --force_pad_token flag to fix this."
+            )
 
     if model_args.model_name_or_path:
         model = AutoModelWithLMHead.from_pretrained(
@@ -212,6 +228,9 @@ def main():
     else:
         logger.info("Training new model from scratch")
         model = AutoModelWithLMHead.from_config(config)
+
+    special_tokens_dict = {'bos_token': '<bos>', 'eos_token': '<eos>', 'pad_token': '<pad>'}
+    num_added_toks = tokenizer.add_special_tokens(special_tokens_dict)
 
     model.resize_token_embeddings(len(tokenizer))
 
