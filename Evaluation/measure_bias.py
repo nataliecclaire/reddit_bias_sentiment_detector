@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from scipy import stats
 from utils import helper_functions as helpers
-from transformers import AutoModelWithLMHead, AutoTokenizer
+from transformers import AutoModelWithLMHead, AutoTokenizer, AutoModelForMaskedLM, AutoModelForCausalLM
 import time
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -15,6 +15,7 @@ def get_perplexity_list(df, m, t):
         try:
             perplexity = helpers.score(row['comments_processed'], m, t)
         except Exception as ex:
+            print(ex.__repr__())
             perplexity = 0
         perplexity_list.append(perplexity)
     return perplexity_list
@@ -44,10 +45,10 @@ GET_PERPLEXITY = True
 ON_TESTSET = False
 GET_PERPLEXITY_TEST = False
 
-demo = 'religion1' # 'race' # '' # 'religion2' # 'gender' # 'race' #'orientation'  #
-demo_1 = 'jews' # 'black' #  # 'muslims' # 'female' # 'black_pos' # 'muslims' #  # 'lgbtq'
+demo = 'religion1' # 'religion2' # 'race' # 'gender' # 'race' #'orientation'  #
+demo_1 = 'jews' # 'muslims' # 'black' # 'female' # 'black_pos' # 'muslims' #  # 'lgbtq'
 demo_2 = 'christians' # 'white'  # 'male' # 'white_pos'  # 'white' #'straight'# #'christians2'
-input_file_suffix = '_processed_sent_biased' # '_processed_phrase_biased_testset' # '_processed_phrase_biased' # '_processed'
+input_file_suffix = '_processed_phrase_biased_testset_reduced' # '_processed_phrase_biased_testset' # '_processed_phrase_biased' # '_processed_sent_biased' # '_processed'
 output_file_suffix = '_perplex_phrase_biased' # '_perplex'
 
 if ON_SET:
@@ -67,14 +68,13 @@ if ON_SET:
 
         # race_df = race_df.dropna()
         # race_df_2 = race_df_2.dropna()
-        # pretrained_model = 'microsoft/DialoGPT-small' #'ctrl'
-        # "microsoft/DialoGPT-small" # 'ctrl' # 'openai-gpt' # 'gpt2' # 'minimaxir/reddit' # 'xlnet-large-cased'
-        pretrained_model = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/eq_loss_run_on_mac/'
+        # pretrained_model = 'microsoft/DialoGPT-small' # 'gpt2' # 'roberta-base' # 'bert-base-uncased' #  #'ctrl'
+        # "microsoft/DialoGPT-small" # 'ctrl' # 'openai-gpt' # 'minimaxir/reddit' # 'xlnet-large-cased'
+        pretrained_model = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/religion1/lm_loss_rel1data/'
         tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
         model = AutoModelWithLMHead.from_pretrained(pretrained_model)
-
-        # race_df['comments_processed'] = race_df['comments_processed'].apply(lambda x: x.lower())
-        # print(race_df.head())
+        # model = AutoModelForMaskedLM.from_pretrained(pretrained_model)
+        # model = AutoModelForCausalLM.from_pretrained(pretrained_model)
 
         race_1_perplexity = get_perplexity_list(race_df, model, tokenizer)
         print('Done with demo1 perplexity in {} on set'.format((time.time() - start)/60))
@@ -104,9 +104,6 @@ if ON_TESTSET:
         pretrained_model = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/model_target2/'
         tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
         model = AutoModelWithLMHead.from_pretrained(pretrained_model)
-
-        # race_df['comments_processed'] = race_df['comments_processed'].apply(lambda x: x.lower())
-        # print(race_df.head())
 
         race_1_perplexity = get_perplexity_list_test(race_df, model, tokenizer, 'black')
         print('Done with demo1 perplexity in {}'.format((time.time() - start) / 60))
@@ -142,10 +139,20 @@ race_2_p = []
 
 logging.info('Filtering out perplexities more than 5000')
 
+
 for p1, p2 in zip(race_1_perplexity, race_2_perplexity):
     if p1 < 50000 and p2 < 50000:
         race_1_p.append(p1)
         race_2_p.append(p2)
+
+# reduced_race_df = race_df[(race_df['perplexity'] < 50000) & (race_df_2['perplexity'] < 50000)]
+# reduced_race_df_2 = race_df_2[(race_df['perplexity'] < 50000) & (race_df_2['perplexity'] < 50000)]
+#
+# print('DF shape after reducing {}'.format(reduced_race_df.shape))
+# print('DF 2 shape after reducing {}'.format(reduced_race_df_2.shape))
+#
+# reduced_race_df.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + input_file_suffix + '_reduced.csv', index=False)
+# reduced_race_df_2.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_2 + input_file_suffix + '_reduced.csv', index=False)
 
 '''
 if ON_SET:
@@ -187,6 +194,8 @@ dif = np.array(race_1_perplexity) - np.array(race_2_perplexity)
 logging.debug('Mean and variance of filtered perplexities demo1 - Mean {}, Variance {}'.format(np.mean(race_1_p), np.var(race_1_p)))
 logging.debug('Mean and variance of filtered perplexities demo2 - Mean {}, Variance {}'.format(np.mean(race_2_p), np.var(race_2_p)))
 logging.debug('Instances in filtered demo 1 and 2: {}, {}'.format(len(race_1_p), len(race_2_p)))
+print('mean of difference {}'.format(np.mean(dif)))
+print('Var of difference {}'.format(np.var(dif)))
 
 t_value, p_value = stats.ttest_ind(race_1_perplexity, race_2_perplexity, equal_var=False)
 
@@ -194,8 +203,12 @@ logging.info('Unfiltered perplexities - T value {} and P value {}'.format(t_valu
 print(t_value, p_value)
 print(len(race_1_p), len(race_2_p))
 
-print(race_1_p)
-print(race_2_p)
+# print(race_1_p)
+# print(race_2_p)
+dif2 = np.array(race_1_p) - np.array(race_2_p)
+
+print('mean of difference {}'.format(np.mean(dif2)))
+print('Var of difference {}'.format(np.var(dif2)))
 
 t_vt, p_vt = stats.ttest_ind(race_1_p, race_2_p)
 logging.info('Filtered perplexities - T value {} and P value {}'.format(t_vt, p_vt))

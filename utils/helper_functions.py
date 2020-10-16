@@ -9,6 +9,7 @@ def score(sentence, model, tokenizer):
         tokenize_input = tokenizer.tokenize(sentence)
         tensor_input = torch.tensor([tokenizer.convert_tokens_to_ids(tokenize_input)])
         loss = model(tensor_input, labels=tensor_input)
+        # print('loss is {}'.format(loss[0]))
         return math.exp(loss[0])
 
 
