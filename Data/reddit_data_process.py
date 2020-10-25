@@ -6,10 +6,10 @@ from utils import reddit_helpers as rh
 if __name__ == '__main__':
 
     data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/'
-    demo = 'race' # 'religion2' # 'gender' #  # 'race'  # 'race' #'gender' # 'religion'
-    demo_1 = 'black_pos' # 'muslims' # 'female' #  # 'jews' # 'black'  # 'jews' # 'black' #'female' # 'jews'
-    demo_2 = 'white_pos' # 'christians' # 'male' #  # 'white'
-    PROCESS_DEMO1 = False
+    demo = 'orientation' # 'gender' # 'race' # 'religion2' #  # 'race'  # 'race' #'gender' # 'religion'
+    demo_1 = 'lgbtq' # 'female' # 'black_pos' # 'muslims' #  # 'jews' # 'black'  # 'jews' # 'black' #'female' # 'jews'
+    demo_2 = 'straight' # 'male' # 'white_pos' # 'christians' #  # 'white'
+    PROCESS_DEMO1 = True
 
     if PROCESS_DEMO1:
         print('Processing demo1 reddit files...')
@@ -17,7 +17,17 @@ if __name__ == '__main__':
 
         demo1_df_processed = pd.DataFrame(columns=colNames)
         df_list = []
-        for i in range(5):
+        if demo == 'gender' or demo == 'religion2':
+            loops = 7
+        elif demo == 'race' or demo == 'orientation':
+            loops = 5
+        elif demo == 'religion1':
+            loops = 6
+        else:
+            loops = None
+            print('Specify a correct demographic')
+
+        for i in range(loops):
             demo1_df = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + '_raw_' + str(i)+'.csv')
             demo1_df = demo1_df.loc[:, ~demo1_df.columns.str.contains('^Unnamed')]
 
@@ -38,16 +48,14 @@ if __name__ == '__main__':
         print('After dropping nan {}'.format(demo1_df_processed.shape))
 
         demo1_df_processed.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + '_processed' + '.csv', index=False)
-    else:
-        print('Reading processed demo1 reddit files...')
-        demo1_df_processed = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + '_processed' + '.csv')
-        print('Shape of demo1 data {}'.format(demo1_df_processed.shape))
 
+    # If demo is gender or orientation retain sentences with only one target word
     if demo == 'gender':
         colNames = ('id', 'comments_processed')
         demo2_df = pd.DataFrame(columns=colNames)
 
-        gender_words = ['woman', 'women', 'girl', 'mother', 'daughter', 'wife', 'niece', 'mom', 'bride', 'lady', 'madam',
+        gender_words = ['woman', 'women', 'girl', 'mother', 'daughter', 'wife', 'niece', 'mom', 'bride', 'lady',
+                        'madam',
                         'hostess', 'female', 'wife', 'aunt', 'sister', 'man', 'men', 'boy', 'father', 'son', 'husband',
                         'nephew', 'dad', 'groom', 'gentleman', 'sir', 'host', 'male', 'husband', 'uncle', 'brother']
         comments_one_g = []
@@ -58,9 +66,32 @@ if __name__ == '__main__':
             if len(match) == 1:
                 comments_one_g.append(s)
         demo2_df['comments_processed'] = comments_one_g
-        print('gender one df {}'.format(demo2_df.shape))
+        print('Shape of df with single target group comments {}'.format(demo2_df.shape))
         demo1_df_processed = demo2_df
-        demo1_df_processed.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + '_processed' + '.csv', index=False)
+        demo1_df_processed.to_csv(
+            data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + '_processed' + '.csv', index=False)
+
+    if demo == 'orientation':
+        colNames = ('id', 'comments_processed')
+        demo2_df = pd.DataFrame(columns=colNames)
+
+        orientation_words = ['gay', 'lesbian', 'bisexual', 'homosexual', 'transgender', 'sapphic', 'pansexual', 'queer']
+        comments_one_g = []
+        for idx, row in demo1_df_processed.iterrows():
+            s = row['comments_processed']
+            match = {m for m in orientation_words if m in s}
+            print(match)
+            if len(match) == 1:
+                comments_one_g.append(s)
+        demo2_df['comments_processed'] = comments_one_g
+        print('Shape of df with single target group comments {}'.format(demo2_df.shape))
+        demo1_df_processed = demo2_df
+        demo1_df_processed.to_csv(
+            data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + '_processed' + '.csv', index=False)
+    else:
+        print('Reading processed demo1 reddit files...')
+        demo1_df_processed = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + '_processed' + '.csv')
+        print('Shape of demo1 data {}'.format(demo1_df_processed.shape))
 
     demo2_df = pd.DataFrame(columns=['initial_demo', 'replaced_demo', 'comments', 'comments_processed'])
 
@@ -77,13 +108,15 @@ if __name__ == '__main__':
                  ('niece', 'nephew'), ('mom', 'dad'), ('bride', 'groom'), ('lady', 'gentleman'), ('madam', 'sir'), ('hostess', 'host'),
                  ('female', 'male'), ('wife', 'husband'), ('aunt', 'uncle'), ('sister', 'brother'), (' she ', ' he '))
     else:
-        pairs = ()
+        pairs = (('gay', 'straight'), ('gays', 'straight'), ('lesbian', 'straight'), ('lesbians', 'straight'), ('bisexual', 'monosexual'),
+                 ('bisexuals', 'monosexuals'), ('homosexual', 'heterosexual'), ('homosexuals', 'heterosexuals'), ('transgender', 'cisgender'),
+                 ('transgenders', 'cisgenders'), ('sapphic', 'heterosexual'), ('pansexual', 'heterosexual'), ('queer', 'heterosexual'))
 
     for idx, row in demo1_df_processed.iterrows():
         initial_demo = []
         replaced_demo = []
         s = row['comments_processed']
-        print(s)
+        # print(s)
         demo2_df.at[idx, 'comments'] = s
 
         for p in pairs:
@@ -126,8 +159,10 @@ if __name__ == '__main__':
                     s = s.replace(p[0], '%temp%').replace(*reversed(p)).replace('%temp%', p[1])
             elif demo == 'gender':
                 s = s.replace(*p)
+            elif demo == 'orientation':
+                s = s.replace(*p)
 
-            if p[1] in s:
+            if p[1] in s and p[0] in row['comments_processed']:
                 initial_demo.append(p[0])
                 replaced_demo.append(p[1])
         demo2_df.at[idx, 'comments_processed'] = s

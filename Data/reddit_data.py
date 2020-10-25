@@ -53,8 +53,8 @@ if __name__ == '__main__':
     start = time.time()
 
     data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/'
-    demo = 'race' # 'religion2' # 'race' #'gender' # 'religion'
-    demo_1 = 'black_pos' # 'muslims' # 'jews' # 'black' #'female' # 'jews'
+    demo = 'gender' # 'orientation' # 'race' # 'religion2' # 'race' # 'religion'
+    demo_1 = 'female' # 'lgbtq' # 'black_pos' # 'muslims' # 'jews' # 'black' # 'jews'
 
     with open(data_path + demo + '/' + demo + '_' + demo_1 + '.txt') as f:
         query_feature = [line.split('\n')[0] for line in f]

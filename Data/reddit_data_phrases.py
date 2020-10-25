@@ -4,8 +4,9 @@ import re
 
 
 data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/'
-demo = 'religion2' # 'religion1' # 'race' # 'gender' #  # 'race'  # 'race' #'gender' # 'religion'
-demo_1 = 'muslims' # 'jews' # 'black_pos' # 'female' # 'black'  # 'jews' # 'black' #'female' # 'jews'
+demo = 'orientation' # 'race' # 'religion2' # 'religion1' # 'gender' #  # 'race'
+demo_1 = 'lgbtq' # 'female' # 'black' # 'muslims' # 'jews' # 'black_pos' # 'female'  # 'jews'
+REMOVE_NO_ATTRIBUTE_IN_WINDOW = True # Remove rows where phrases do not have attributes
 
 demo1_df_processed = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + '_processed' + '.csv')
 
@@ -16,11 +17,16 @@ attributes = []
 
 
 if demo == 'race':
-    targets = []
-    attributes = []
+    targets = ['black', 'blacks', 'african', 'africans', 'afro-americans', 'negroes', 'dark-skinned', 'african-americans']
+    with open(data_path + demo + '/' + demo + '_' + demo_1 + '.txt') as f:
+        attributes = [re.sub('[*"]', '', line.split('\n')[0]) for line in f]
+    print(attributes)
 elif demo == 'gender':
-    targets = []
-    attributes = []
+    targets = ['women', 'mothers', 'woman', 'girl', 'wife', 'niece', 'mom', 'moms', 'grandmother', 'stepdaughter', 'bride',
+               'lady', 'madam', 'granddaughter', 'hostess', 'girlfriend', 'females', 'wives', 'aunt', 'sisters', 'sister', 'girlfriends']
+    with open(data_path + demo + '/' + demo + '_' + demo_1 + '.txt') as f:
+        attributes = [re.sub('[*"]', '', line.split('\n')[0]) for line in f]
+    print(attributes)
 elif demo == 'religion1':
     targets = ['jew', 'Jews', 'Jewish', 'Torah', 'Judaism', 'Semitic', 'Ashkenazi']
     with open(data_path + demo + '/' + demo + '_' + demo_1 + '.txt') as f:
@@ -32,8 +38,11 @@ elif demo == 'religion2':
         attributes = [re.sub('[*"]', '', line.split('\n')[0]) for line in f]
     print(attributes)
 elif demo == 'orientation':
-    targets = []
-    attributes = []
+    targets = ['gay', 'gays', 'lesbian', 'lesbians', 'bisexual', 'bisexuals', 'homosexual', 'homosexuals', 'transgender',
+               'transgenders', 'sapphic', 'pansexual', 'pansexuals', 'queer', 'queers']
+    with open(data_path + demo + '/' + demo + '_' + demo_1 + '.txt') as f:
+        attributes = [re.sub('[*"]', '', line.split('\n')[0]) for line in f]
+    print(attributes)
 
 data_list = []
 # demo1_df_processed = demo1_df_processed[3377:3390]
@@ -97,24 +106,15 @@ for idx, row in demo1_df_processed.iterrows():
         pass
 
 
-print(data_list)
+# print(data_list)
 data_df = pd.DataFrame(data_list)
 print(data_df.shape)
 data_df = data_df.drop_duplicates(subset=['phrase'])
 print(data_df.shape)
 
+if REMOVE_NO_ATTRIBUTE_IN_WINDOW:
+    data_df = data_df[data_df.attribute_in_window]
+
+print(data_df.shape)
+
 data_df.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + '_processed_phrase' + '.csv', index=False)
-
-
-# df_manual_annot = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_diff_manual_bias_annot.csv')
-# df_manual_annot = df_manual_annot.rename(columns={'comments_1': 'comment'})
-# df_manual_annot = df_manual_annot.loc[:, ~df_manual_annot.columns.str.contains('^Unnamed')]
-#
-# print(df_manual_annot.dtypes)
-# print(data_df.dtypes)
-
-
-# data_df_annot = data_df.merge(df_manual_annot, on='comment', how='inner', suffixes=('_1', '_2'))
-#
-# data_df_annot = data_df_annot.drop_duplicates(subset=['id'])
-# data_df_annot.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + '_processed_phrase_annotated.csv', index=False)

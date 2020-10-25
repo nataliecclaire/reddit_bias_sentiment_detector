@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from scipy import stats
 from utils import helper_functions as helpers
-from transformers import AutoModelWithLMHead, AutoTokenizer, AutoModelForMaskedLM, AutoModelForCausalLM
+from transformers import AutoModelWithLMHead, AutoTokenizer, AutoModelForMaskedLM, AutoModelForCausalLM, AutoModelWithLMAndDebiasHead
 import time
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -13,7 +13,7 @@ def get_perplexity_list(df, m, t):
     perplexity_list = []
     for idx, row in df.iterrows():
         try:
-            perplexity = helpers.score(row['comments_processed'], m, t)
+            perplexity = helpers.perplexity_score(row['comments_processed'], m, t)
         except Exception as ex:
             print(ex.__repr__())
             perplexity = 0
@@ -26,13 +26,18 @@ def get_perplexity_list_test(df, m, t, dem):
     for idx, row in df.iterrows():
         try:
             if dem == 'black':
-                perplexity = helpers.score(row['comments_1'], m, t)
+                perplexity = helpers.perplexity_score(row['comments_1'], m, t)
             else:
-                perplexity = helpers.score(row['comments_2'], m, t)
+                perplexity = helpers.perplexity_score(row['comments_2'], m, t)
         except Exception as ex:
             perplexity = 0
         perplexity_list.append(perplexity)
     return perplexity_list
+
+
+def get_model_perplexity(df, m, t):
+    model_perplexity = helpers.model_perplexity(df['comments_processed'], m, t)
+    return model_perplexity
 
 
 start = time.time()
@@ -50,6 +55,8 @@ demo_1 = 'jews' # 'muslims' # 'black' # 'female' # 'black_pos' # 'muslims' #  # 
 demo_2 = 'christians' # 'white'  # 'male' # 'white_pos'  # 'white' #'straight'# #'christians2'
 input_file_suffix = '_processed_phrase_biased_testset_reduced' # '_processed_phrase_biased_testset' # '_processed_phrase_biased' # '_processed_sent_biased' # '_processed'
 output_file_suffix = '_perplex_phrase_biased' # '_perplex'
+
+debiasing_head = 'EqualisingLoss'
 
 if ON_SET:
     logging.basicConfig(filename=exp_path+'measure_bias'+demo+'.log', filemode='w', level=logging.DEBUG, format='%(asctime)s %(message)s')
@@ -70,15 +77,18 @@ if ON_SET:
         # race_df_2 = race_df_2.dropna()
         # pretrained_model = 'microsoft/DialoGPT-small' # 'gpt2' # 'roberta-base' # 'bert-base-uncased' #  #'ctrl'
         # "microsoft/DialoGPT-small" # 'ctrl' # 'openai-gpt' # 'minimaxir/reddit' # 'xlnet-large-cased'
-        pretrained_model = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/religion1/lm_loss_rel1data/'
+        pretrained_model = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/religion1/normal_biased_data_allt/'
         tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
-        model = AutoModelWithLMHead.from_pretrained(pretrained_model)
+        model = AutoModelWithLMAndDebiasHead.from_pretrained(pretrained_model, debiasing_head=debiasing_head)
         # model = AutoModelForMaskedLM.from_pretrained(pretrained_model)
         # model = AutoModelForCausalLM.from_pretrained(pretrained_model)
 
         race_1_perplexity = get_perplexity_list(race_df, model, tokenizer)
         print('Done with demo1 perplexity in {} on set'.format((time.time() - start)/60))
         race_2_perplexity = get_perplexity_list(race_df_2, model, tokenizer)
+
+        model_perp = get_model_perplexity(race_df, model, tokenizer)
+        print('Model perplexity {}'.format(model_perp))
 
         logging.info('Time to get perplexity scores {}'.format((time.time() - start)/60))
         race_df['perplexity'] = race_1_perplexity
@@ -127,6 +137,9 @@ logging.debug('Instances in demo 1 and 2: {}, {}'.format(len(race_1_perplexity),
 logging.debug('Mean and variance of unfiltered perplexities demo1 - Mean {}, Variance {}'.format(np.mean(race_1_perplexity), np.var(race_1_perplexity)))
 logging.debug('Mean and variance of unfiltered perplexities demo2 - Mean {}, Variance {}'.format(np.mean(race_2_perplexity), np.var(race_2_perplexity)))
 
+print('Mean and variance of unfiltered perplexities demo1 - Mean {}, Variance {}'.format(np.mean(race_1_perplexity), np.var(race_1_perplexity)))
+print('Mean and variance of unfiltered perplexities demo2 - Mean {}, Variance {}'.format(np.mean(race_2_perplexity), np.var(race_2_perplexity)))
+
 # sns.distplot(race_1_perplexity, hist=True, kde=True)
 # sns.distplot(race_2_perplexity, hist=True, kde=True)
 # plt.show()
@@ -144,6 +157,8 @@ for p1, p2 in zip(race_1_perplexity, race_2_perplexity):
     if p1 < 50000 and p2 < 50000:
         race_1_p.append(p1)
         race_2_p.append(p2)
+    else:
+        print('extreme perplexity d1 {}, d2 {}'.format(p1, p2))
 
 # reduced_race_df = race_df[(race_df['perplexity'] < 50000) & (race_df_2['perplexity'] < 50000)]
 # reduced_race_df_2 = race_df_2[(race_df['perplexity'] < 50000) & (race_df_2['perplexity'] < 50000)]
@@ -170,17 +185,7 @@ if ON_SET:
 
     df_merged.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + '_diff_reduced.csv', index=False)
 '''
-'''
-sns.distplot(race_1_p, hist=True, kde=True)
-sns.distplot(race_2_p, hist=True, kde=True)
-plt.show()
-plt.clf()
 
-sns.distplot(dif, hist=True, kde=True)
-plt.show()
-plt.clf()
-plt.close()
-'''
 logging.info('Saving perplexity difference for each pair of sentence')
 
 dif = np.array(race_1_perplexity) - np.array(race_2_perplexity)

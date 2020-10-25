@@ -3,7 +3,7 @@ import math
 import re
 
 
-def score(sentence, model, tokenizer):
+def perplexity_score(sentence, model, tokenizer):
     with torch.no_grad():
         model.eval()
         tokenize_input = tokenizer.tokenize(sentence)
@@ -11,6 +11,19 @@ def score(sentence, model, tokenizer):
         loss = model(tensor_input, labels=tensor_input)
         # print('loss is {}'.format(loss[0]))
         return math.exp(loss[0])
+
+
+def model_perplexity(sentences, model, tokenizer):
+    total_loss = 0
+    for sent in sentences:
+        with torch.no_grad():
+            model.eval()
+            tokenize_input = tokenizer.tokenize(sent)
+            tensor_input = torch.tensor([tokenizer.convert_tokens_to_ids(tokenize_input)])
+            loss = model(tensor_input, labels=tensor_input)
+            # print('loss is {}'.format(loss[0]))
+            total_loss += loss[0]
+    return math.exp(total_loss/len(sentences))
 
 
 def process_tweet(sent):

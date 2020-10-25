@@ -9,7 +9,7 @@ start = time.time()
 
 data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/'
 
-pretrained_model = 'gpt2' # 'roberta-base' # 'bert-base-uncased' # 'microsoft/DialoGPT-small' # 'minimaxir/reddit' # 'gpt2-medium'
+pretrained_model = 'microsoft/DialoGPT-small' # 'gpt2' # 'roberta-base' # 'bert-base-uncased' # 'minimaxir/reddit' # 'gpt2-medium'
 tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
 model = AutoModelWithLMHead.from_pretrained(pretrained_model)
 

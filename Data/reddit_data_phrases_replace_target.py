@@ -4,22 +4,29 @@ from utils import reddit_helpers as rh
 
 
 data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/'
-demo = 'religion2' # 'religion1' # 'race' # 'gender' #  # 'race'  # 'race' #'gender'
-demo_1 = 'muslims' # 'jews' # 'black_pos' # 'female' # 'black'  # 'jews' # 'black' #'female' # 'jews'
+demo = 'religion1' # 'religion2' # 'race' # 'gender' #  # 'race'  # 'race' #'gender'
+demo_1 = 'jews' # 'muslims' # 'black_pos' # 'female' # 'black'  # 'jews' # 'black' #'female' # 'jews'
 demo_2 = 'christians' # 'white_pos' # 'male' #  # 'white'
+type_file = 'bias_unbias' # 'bias'
+output_file_suffix = '_processed_phrase_biased_unbiased' # '_processed_phrase_biased'
 
 demo1_df_processed = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + '_processed_phrase_annotated' + '.csv', encoding='Latin-1')
 
 print(demo1_df_processed.head())
 print(demo1_df_processed.shape)
 
-demo1_df_processed = demo1_df_processed[demo1_df_processed['bias_phrase'] == 1]
+if type_file == 'bias':
+    demo1_df_processed = demo1_df_processed[demo1_df_processed['bias_phrase'] == 1]
+elif type_file == 'bias_unbias':
+    demo1_df_processed = demo1_df_processed[(demo1_df_processed['bias_phrase'] == 1) | (demo1_df_processed['bias_phrase'] == 0)]
+
 demo1_df_processed = demo1_df_processed.rename(columns={"phrase": "comments_processed"})
+demo1_df_processed = demo1_df_processed.dropna(subset=['comments_processed'])
 
 print(demo1_df_processed.head())
 print(demo1_df_processed.shape)
 
-demo1_df_processed.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + '_processed_phrase_biased' + '.csv', index=False)
+demo1_df_processed.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + output_file_suffix + '.csv', index=False)
 
 if demo == 'gender':
     colNames = ('id', 'comments_processed')
@@ -115,4 +122,4 @@ for idx, row in demo1_df_processed.iterrows():
     demo2_df.at[idx, 'replaced_demo'] = replaced_demo
 
 print('Shape of demo2 data {}'.format(demo2_df.shape))
-demo2_df.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_2 + '_processed_phrase_biased' + '.csv', index=False)
+demo2_df.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_2 + output_file_suffix + '.csv', index=False)

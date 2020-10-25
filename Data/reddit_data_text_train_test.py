@@ -34,7 +34,15 @@ def replace_with_caps(text, replacements):
 
 pd.set_option('display.max_columns', 50)
 data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/'
-demo = 'religion2' # 'religion1' # 'race' # 'gender' #  # 'race'  # 'race' #'gender' # 'religion'
+demo = 'religion1' # 'religion2' # 'race' # 'gender' #  # 'race'  # 'race' #'gender' # 'religion'
+demo_1 = 'jews' # 'muslims'
+demo_2 = 'christians'
+input_file_suffix = '_processed_phrase_biased_unbiased' # '_processed_phrase_biased'
+output_txt_train = '_bias_unbias_manual_train.txt' # '_bias_manual_lowercase_train.txt'
+output_txt_test = '_bias_unbias_manual_valid.txt' # '_bias_manual_lowercase_valid.txt'
+output_csv_test = '_processed_phrase_biased_unbias_testset' # '_processed_phrase_biased_testset'
+output_csv_train = '_processed_phrase_biased_unbias_trainset'
+type_data = 'bias_unbias'
 
 '''
 demo_1 = 'jews' # 'white'
@@ -55,15 +63,22 @@ print('Saving test dataset...')
 df_test.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_diff_test' + '.csv', index=False)
 '''
 
-demo_1 = 'muslims' # 'jews'
-demo_2 = 'christians'
+df = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + input_file_suffix + '.csv')
+print('df shape {}'.format(df.shape))
 
-df = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + '_processed_phrase_biased' + '.csv')
+if type_data == 'bias_unbias':
+    df_bias_testset = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + '_processed_phrase_biased_testset_reduced' + '.csv')
+    cond = df['comments_processed'].isin(df_bias_testset['comments_processed'])
+    df = df.drop(df[cond].index)
+
+print(df.shape)
 train_test_ratio = 0.6
-df_train, df_test = train_test_split(df, train_size=train_test_ratio, random_state=1)
+df_train, df_test = train_test_split(df, stratify=df['bias_phrase'], train_size=train_test_ratio, random_state=1)
 
 print('Train {}'.format(df_train.shape))
 print('Test {}'.format(df_test.shape))
+print(df_train['bias_phrase'].value_counts())
+print(df_test['bias_phrase'].value_counts())
 
 '''
 if demo == 'religion2':
@@ -81,8 +96,8 @@ print(df_train.head())
 '''
 
 desti_path = data_path + 'bias_annotated/'
-build_dataset_manual_annot(df_train, demo_1, desti_path + demo + '_bias_manual_lowercase_train.txt')
-build_dataset_manual_annot(df_test, demo_1, desti_path + demo + '_bias_manual_lowercase_valid.txt')
+build_dataset_manual_annot(df_train, demo_1, desti_path + demo + output_txt_train)
+build_dataset_manual_annot(df_test, demo_1, desti_path + demo + output_txt_test)
 
 '''
 # get test data for both target groups: used for measuring bias
@@ -106,5 +121,5 @@ df_test = df_test.rename(columns={'comments_merge_on': 'comments_processed'})
 df_test_demo2.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_2 + '_processed_phrase_biased_testset' + '.csv', index=False)
 '''
 
-# df_test.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + '_processed_phrase_biased_testset' + '.csv', index=False)
-# df_train.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + '_processed_phrase_biased_trainset' + '.csv', index=False)
+# df_test.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + output_csv_test + '.csv', index=False)
+df_train.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + output_csv_train + '.csv', index=False)

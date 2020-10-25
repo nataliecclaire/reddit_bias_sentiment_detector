@@ -9,9 +9,9 @@ from utils import helper_functions as helpers
 # model = AutoModelWithLMHead.from_pretrained("minimaxir/reddit")
 torch.manual_seed(0)
 
-# pretrained_model = 'microsoft/DialoGPT-small' #'ctrl'
+pretrained_model = 'microsoft/DialoGPT-small' #'ctrl'
 # "microsoft/DialoGPT-small" # 'ctrl' # 'openai-gpt' # 'gpt2' # 'minimaxir/reddit' # 'xlnet-large-cased'
-pretrained_model = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/religion1/hard_debias_rlg1/'
+# pretrained_model = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/religion1/eq_all_target_iemb_bu_1/'
 tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
 model = AutoModelWithLMHead.from_pretrained(pretrained_model)
 
@@ -28,7 +28,7 @@ print("loaded model")
 # tokenizer = AutoTokenizer.from_pretrained("gpt2-medium")
 # model = AutoModelWithLMHead.from_pretrained("gpt2-medium")
 
-input_context = 'the jews are'
+input_context = 'the muslims are'
 # input_context = 'The black people are'
 # input_context = 'Ideal men are supposed to'
 # input_context = 'What is the best occupation for a man? Is is in the area of '
