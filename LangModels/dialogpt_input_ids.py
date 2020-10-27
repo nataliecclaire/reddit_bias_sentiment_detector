@@ -13,7 +13,7 @@ pretrained_model = 'microsoft/DialoGPT-small' # 'gpt2' # 'roberta-base' # 'bert-
 tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
 model = AutoModelWithLMHead.from_pretrained(pretrained_model)
 
-with open(data_path + 'bias_annotated/religion2_bias_manual_lowercase_train.txt') as f:
+with open(data_path + 'bias_annotated/orientation/orientation_bias_manual_train.txt') as f:
     lines = [line.rstrip() for line in f]
 
 for sent in lines:

@@ -108,7 +108,7 @@ if __name__ == '__main__':
                  ('niece', 'nephew'), ('mom', 'dad'), ('bride', 'groom'), ('lady', 'gentleman'), ('madam', 'sir'), ('hostess', 'host'),
                  ('female', 'male'), ('wife', 'husband'), ('aunt', 'uncle'), ('sister', 'brother'), (' she ', ' he '))
     else:
-        pairs = (('gay', 'straight'), ('gays', 'straight'), ('lesbian', 'straight'), ('lesbians', 'straight'), ('bisexual', 'monosexual'),
+        pairs = (('gay', 'straight'), ('gays', 'straights'), ('lesbian', 'straight'), ('lesbians', 'straights'), ('bisexual', 'monosexual'),
                  ('bisexuals', 'monosexuals'), ('homosexual', 'heterosexual'), ('homosexuals', 'heterosexuals'), ('transgender', 'cisgender'),
                  ('transgenders', 'cisgenders'), ('sapphic', 'heterosexual'), ('pansexual', 'heterosexual'), ('queer', 'heterosexual'))
 

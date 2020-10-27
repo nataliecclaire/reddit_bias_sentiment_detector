@@ -4,12 +4,13 @@ from utils import reddit_helpers as rh
 
 
 data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/'
-demo = 'religion2' # 'orientation' # 'religion1' # 'race' # 'gender' #  # 'race'  # 'race' #'gender'
-demo_1 = 'muslims' # 'lgbtq' # 'jews' # 'black_pos' # 'female' # 'black'  # 'jews' # 'black' #'female' # 'jews'
+demo = 'religion1' # 'orientation' # 'religion1' # 'race' # 'gender' #  # 'race'  # 'race' #'gender'
+demo_1 = 'jews' # 'muslims' # 'lgbtq' # 'jews' # 'black_pos' # 'female' # 'black'  # 'jews' # 'black' #'female' # 'jews'
 demo_2 = 'christians' # 'straight' # 'white_pos' # 'male' #  # 'white'
-file_suffix = '_processed_phrase_biased_trainset' # '_processed_phrase_biased_testset'
+in_file_suffix = '_processed_phrase_biased_trainset' # '_processed_phrase_biased_testset'
+out_file_suffix = '_processed_phrase_unbiased_trainset_pos_attr' # '_processed_phrase_unbiased_testset_pos_attr'
 
-demo1_df_processed = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + file_suffix + '.csv', encoding='Latin-1')
+demo1_df_processed = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + in_file_suffix + '.csv', encoding='Latin-1')
 
 print(demo1_df_processed.head())
 print(demo1_df_processed.shape)
@@ -18,11 +19,23 @@ print(demo1_df_processed.shape)
 demo2_df = pd.DataFrame(columns=['initial_demo', 'replaced_demo', 'comments', 'comments_processed'])
 
 if demo == 'race':
-    pairs = (('black', 'white'), ('african american', 'anglo american'), ('african-american', 'anglo-american'),
+    pairs = (('african american', 'anglo american'), ('african-american', 'anglo-american'),
              ('afro-american', 'anglo-american'), ('african', 'american'), ('afroamericans', 'angloamericans'),
              ('negroes', 'caucasians'), ('dark-skin', 'light-skin'), ('dark skin', 'light skin'))
 elif demo == 'religion1':
-    pairs = (('jew ', 'christian '), ('jewish', 'christian'), ('jews ', 'christians '), ('judaism', 'christianity'))
+    pairs = (('greedy', 'generous'), ('greed', 'generosity'), ('meek ', 'confident '), ('nerdy', 'dummy'), ('nerd', 'dummy'),
+             ('circumci', 'decircumci'), ('spoiled', 'disciplined'), ('materialistic', 'spiritual'), ('hooked', 'short'),
+             ('hook', 'short'), ('beady', 'blue'), ('large nose', 'short nose'), ('big nose', 'short nose'),
+             ('red hair', 'black hair'), ('red-hair', 'black-hair'),
+             ('lending', 'borrowing'), ('miserly', 'spendthrift'), ('miser', 'spendthrift'), ('shady', 'reputable'),
+             ('frugal', 'extravagant'), (' thrift ', 'lavishness'), ('lust', 'apathy'), ('overprotective', 'careless'),
+             ('loud', 'quiet'), ('talkative', 'untalkative'), ('overfeed', 'underfeed'), ('aggressive', 'peaceful'),
+             ('pushy', 'modest'), ('immigra', 'emigra'), ('dominating', 'submissive'), ('overbearing', 'humble'),
+             ('interfering', 'unobtrusive'), ('selfish', 'selfless'), ('devil', 'angel'), ('evil', 'good') , ('satanic', 'godly'),
+             ('satan', 'god'), ('inferior', 'superior'), ('horn', 'no horn'), ('tail', 'no tail'), ('manipulative', 'innocent'),
+             ('manipulating', 'innocent'),
+             ('cannibal', 'civilized'), ('insatiable', 'appeasable'), ('effeminate', 'masculine'), ('conspiring', 'neglecting'),
+             ('conspire', 'neglect'), ('conspiracies', 'faithfulness'), ('conspiracy', 'faithfulness'))
 elif demo == 'religion2':
     pairs = (('muslim', 'christian'), ('islamic', 'christian'), ('islam ', 'christianity '), ('arabs', 'americans'), ('islamism', 'christianity'))
 elif demo == 'gender':
@@ -50,41 +63,11 @@ for idx, row in demo1_df_processed.iterrows():
     for p in pairs:
         # s = s.replace(*p)
         if demo == 'race':
-            if p[0] == 'african' and p[0] in s and ('anglo american' in s or 'anglo-american' in s):
                 s = s.replace(*p)
-            elif p[1] == 'american' and p[1] in s and ('anglo american' in s or 'anglo-american' in s):
-                s = s.replace(*p)
-            elif p[0] == 'afro-american' and p[0] in s:
-                s = s.replace(*p)
-            else:
-                s = s.replace(p[0], '%temp%').replace(*reversed(p)).replace('%temp%', p[1])
         elif demo == 'religion1':
-            if p[0] == 'jewish':
-                if p[0] in s and ('christian' in s):
-                    s = s.replace(*p)
-                elif 'christian' in s:
-                    s = s.replace(*p)
-                else:
-                    s = s.replace(p[0], '%temp%').replace(*reversed(p)).replace('%temp%', p[1])
-            else:
-                s = s.replace(p[0], '%temp%').replace(*reversed(p)).replace('%temp%', p[1])
+                s = s.replace(*p)
         elif demo == 'religion2':
-            if p[0] == 'islamic':
-                if p[0] in s and ('christian' in s):
-                    s = s.replace(*p)
-                elif 'christian' in s:
-                    s = s.replace(*p)
-                else:
-                    s = s.replace(p[0], '%temp%').replace(*reversed(p)).replace('%temp%', p[1])
-            elif p[0] == 'islamism':
-                if p[0] in s and ('christianity' in s):
-                    s = s.replace(*p)
-                elif 'christianity' in s:
-                    s = s.replace(*p)
-                else:
-                    s = s.replace(p[0], '%temp%').replace(*reversed(p)).replace('%temp%', p[1])
-            else:
-                s = s.replace(p[0], '%temp%').replace(*reversed(p)).replace('%temp%', p[1])
+                s = s.replace(*p)
         elif demo == 'gender':
             s = s.replace(*p)
         elif demo == 'orientation':
@@ -98,4 +81,4 @@ for idx, row in demo1_df_processed.iterrows():
     demo2_df.at[idx, 'replaced_demo'] = replaced_demo
 
 print('Shape of demo2 data {}'.format(demo2_df.shape))
-demo2_df.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_2 + file_suffix + '.csv', index=False)
+demo2_df.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + out_file_suffix + '.csv', index=False)
