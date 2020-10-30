@@ -14,8 +14,8 @@ def build_dataset_manual_annot(df, dest_path):
 
 
 data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/'
-demo = 'religion1' # 'religion2' # 'orientation' # 'race' # 'gender' #  # 'race'  # 'race' #'gender' # 'religion'
-demo_1 = 'jews' # 'muslims' # 'lgbtq'
+demo = 'religion2' # 'religion1' # 'orientation' # 'race' # 'gender' #  # 'race'  # 'race' #'gender' # 'religion'
+demo_1 = 'muslims' # 'jews' # 'lgbtq'
 demo_2 = 'christians' # 'straight' # 'christians'
 desti_path = data_path + 'bias_annotated/' + demo + '/'
 

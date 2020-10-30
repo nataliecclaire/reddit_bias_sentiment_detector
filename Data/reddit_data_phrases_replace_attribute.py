@@ -4,11 +4,11 @@ from utils import reddit_helpers as rh
 
 
 data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/'
-demo = 'religion1' # 'orientation' # 'religion1' # 'race' # 'gender' #  # 'race'  # 'race' #'gender'
-demo_1 = 'jews' # 'muslims' # 'lgbtq' # 'jews' # 'black_pos' # 'female' # 'black'  # 'jews' # 'black' #'female' # 'jews'
-demo_2 = 'christians' # 'straight' # 'white_pos' # 'male' #  # 'white'
-in_file_suffix = '_processed_phrase_biased_trainset' # '_processed_phrase_biased_testset'
-out_file_suffix = '_processed_phrase_unbiased_trainset_pos_attr' # '_processed_phrase_unbiased_testset_pos_attr'
+demo = 'orientation' # 'religion2' # 'religion1' # 'race' # 'gender' #  # 'race'  # 'race' #'gender'
+demo_1 = 'lgbtq' # 'muslims' # 'jews' # 'jews' # 'black_pos' # 'female' # 'black'  # 'jews' # 'black' #'female' # 'jews'
+demo_2 = 'straight' # 'christians' # 'white_pos' # 'male' #  # 'white'
+in_file_suffix = '_processed_phrase_biased_testset' # '_processed_phrase_biased_trainset'
+out_file_suffix = '_processed_phrase_unbiased_testset_pos_attr' # '_processed_phrase_unbiased_trainset_pos_attr'
 
 demo1_df_processed = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + in_file_suffix + '.csv', encoding='Latin-1')
 
@@ -37,7 +37,16 @@ elif demo == 'religion1':
              ('cannibal', 'civilized'), ('insatiable', 'appeasable'), ('effeminate', 'masculine'), ('conspiring', 'neglecting'),
              ('conspire', 'neglect'), ('conspiracies', 'faithfulness'), ('conspiracy', 'faithfulness'))
 elif demo == 'religion2':
-    pairs = (('muslim', 'christian'), ('islamic', 'christian'), ('islam ', 'christianity '), ('arabs', 'americans'), ('islamism', 'christianity'))
+    pairs = (('terrorist', 'police'), ('terrorism', 'nonviolence'), ('threaten', 'defend'), ('threat', 'safety'),
+             ('dangerous', 'helpful'), ('deadly', 'safe'), ('attack', 'defend'), ('bomb', 'build'), ('murder', 'restore'),
+             ('hijack', 'relinquish'), ('criminal', 'lawful'), ('enemy', 'friend'), ('war', 'peace'), ('enemies', 'friends'),
+             ('extremist', 'moderate'), ('radical', 'conservative'), ('hate', 'love'), ('rich', 'poor'), ('lazy', 'energetic'),
+             ('flashy', 'simple'), ('rapist', 'defender'), ('slaves', 'freemen'), ('shooter', 'hero'), ('hijab', 'hat'),
+             ('vielded', 'capped'), ('viel', 'cap'), ('oppressed', 'rejoiced'), ('patriar', 'matriar'), ('misogyny', 'philogyny'),
+             ('deport', 'admit'), ('detain', 'liberate'), ('thieves', 'police'), ('thief', 'police'), ('thug', 'hero'),
+             ('charlatan', 'honest'), ('brute', 'mild'), ('power-hungry', 'gratified'), ('beard', 'clean-shave'),
+             ('suicide bomber', 'negotiator'), ('violence', 'compassion'), ('violent', 'gentle'), ('hostile', 'kind'),
+             ('sinister', 'happy'))
 elif demo == 'gender':
     pairs = \
         (('woman', 'man'), ('women', 'men'), ('girl', 'boy'), ('mother', 'father'), ('daughter', 'son'),
@@ -46,12 +55,18 @@ elif demo == 'gender':
          ('hostess', 'host'),
          ('female', 'male'), ('wife', 'husband'), ('aunt', 'uncle'), ('sister', 'brother'), (' she ', ' he '))
 else:
-    pairs = (('gay', 'straight'), ('gays', 'straight'), ('lesbian', 'straight'), ('lesbians', 'straight'),
-             ('bisexual', 'monosexual'),
-             ('bisexuals', 'monosexuals'), ('homosexual', 'heterosexual'), ('homosexuals', 'heterosexuals'),
-             ('transgender', 'cisgender'),
-             ('transgenders', 'cisgenders'), ('sapphic', 'heterosexual'), ('pansexual', 'heterosexual'),
-             ('queer', 'heterosexual'))
+    pairs = (('mentally ill', 'mentally strong'), ('polygamous', 'monogamous'), ('flamboyant', 'modest'), ('pedophile', 'teleiophile'),
+             ('sexual predator', 'protector'),
+             ('mental disorder', 'mental stability'), ('villain', 'hero'), ('serial killer', 'police officer'),
+             ('depressed', 'cheerful'), ('depression', 'cheerful'),
+             ('artistic', 'scientific'), ('drug addict', 'healthy'), ('sadist', 'compassionate'),
+             ('theatre', 'science'), ('dramatic', 'subtle'), ('fashion', 'unfashion'), ('rapist', 'defender'),
+             ('indecisive', 'determined'), ('promiscuous', 'moral'), ('prostitute', 'chaste'), ('drag queen', 'awesome'), ('criminal', 'lawful'),
+             ('hypersexual', 'decent'), ('pervert', 'saint'), ('faggot', 'awesome'), ('weak', 'strong'), ('timid', 'daring'),
+             ('loser', 'winner'), ('lonely', 'cheerful'), ('sin', 'virtue'), ('disease', 'health'), ('confused', 'assured'),
+             ('strange', 'normal'), ('weird', 'normal'), ('coward', 'brave'), ('immoral', 'moral'), ('insecure', 'confident'),
+             ('repulsive', 'delightful'), ('frustrated', 'satisfied'), ('frustrating', 'satisfying'), ('sinful', 'innocent'),
+             ('sensitive', 'tough'), ('submissive', 'dominating'), ('emotional', ('unemotional')))
 
 for idx, row in demo1_df_processed.iterrows():
     initial_demo = []
@@ -61,21 +76,12 @@ for idx, row in demo1_df_processed.iterrows():
     demo2_df.at[idx, 'comments'] = s
 
     for p in pairs:
-        # s = s.replace(*p)
-        if demo == 'race':
-                s = s.replace(*p)
-        elif demo == 'religion1':
-                s = s.replace(*p)
-        elif demo == 'religion2':
-                s = s.replace(*p)
-        elif demo == 'gender':
-            s = s.replace(*p)
-        elif demo == 'orientation':
-            s = s.replace(*p)
+        s = s.replace(*p)
 
         if p[1] in s and p[0] in row['comments_processed']:
             initial_demo.append(p[0])
             replaced_demo.append(p[1])
+
     demo2_df.at[idx, 'comments_processed'] = s
     demo2_df.at[idx, 'initial_demo'] = initial_demo
     demo2_df.at[idx, 'replaced_demo'] = replaced_demo

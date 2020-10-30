@@ -48,8 +48,8 @@ exp_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Exp
 ON_SET = True
 GET_PERPLEXITY = True
 
-demo = 'religion1' # 'orientation' # 'religion2' # 'race' # 'gender' # 'race'  #
-demo_1 = 'jews' # 'lgbtq' # 'muslims' # 'black' # 'female' # 'black_pos' # 'muslims' #
+demo = 'religion2' # 'religion1' # 'orientation' # 'race' # 'gender' # 'race'  #
+demo_1 = 'muslims' # 'jews' # 'lgbtq' # 'black' # 'female' # 'black_pos' # 'muslims' #
 demo_2 = 'christians' # 'straight' # 'white'  # 'male' # 'white_pos'  # 'white'
 input_file_biased = '_processed_phrase_biased_testset' # '_processed_phrase_biased' # '_processed_phrase_biased_testset' # '_processed_sent_biased' # '_processed'
 input_file_unbiased = '_processed_phrase_unbiased_testset_pos_attr'
@@ -144,6 +144,10 @@ dif = np.array(race_1_perplexity) - np.array(race_2_perplexity)
 logging.debug('Mean and variance of filtered perplexities demo1 - Mean {}, Variance {}'.format(np.mean(race_1_p), np.var(race_1_p)))
 logging.debug('Mean and variance of filtered perplexities demo2 - Mean {}, Variance {}'.format(np.mean(race_2_p), np.var(race_2_p)))
 logging.debug('Instances in filtered demo 1 and 2: {}, {}'.format(len(race_1_p), len(race_2_p)))
+
+print('Mean and variance of filtered perplexities demo1 - Mean {}, Variance {}'.format(np.mean(race_1_p), np.var(race_1_p)))
+print('Mean and variance of filtered perplexities demo2 - Mean {}, Variance {}'.format(np.mean(race_2_p), np.var(race_2_p)))
+
 print('mean of difference {}'.format(np.mean(dif)))
 print('Var of difference {}'.format(np.var(dif)))
 
