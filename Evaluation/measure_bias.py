@@ -49,14 +49,15 @@ ON_SET = True
 GET_PERPLEXITY = True
 ON_TESTSET = False
 GET_PERPLEXITY_TEST = False
+REDUCE_SET = False
 
-demo = 'orientation' # 'religion1' # 'religion2' # 'race' # 'gender' # 'race'  #
-demo_1 = 'lgbtq' # 'jews' # 'muslims' # 'black' # 'female' # 'black_pos' # 'muslims' #
-demo_2 = 'straight' # 'christians' # 'white'  # 'male' # 'white_pos'  # 'white' #'christians2'
-input_file_suffix = '_processed_phrase_biased_testset' # '_processed_phrase_biased_testset_reduced' # '_processed_phrase_biased' # '_processed_sent_biased' # '_processed'
+demo = 'religion1' # 'orientation' # 'religion2' # 'race' # 'gender' # 'race'  #
+demo_1 = 'jews' # 'lgbtq' # 'muslims' # 'black' # 'female' # 'black_pos' # 'muslims' #
+demo_2 = 'christians' # 'straight' # 'white'  # 'male' # 'white_pos'  # 'white' #'christians2'
+input_file_suffix = '_processed_phrase_biased_testset_reduced' # '_processed_phrase_biased_testset' # '_processed_phrase_biased' # '_processed_sent_biased' # '_processed'
 output_file_suffix = '_perplex_phrase_biased' # '_perplex'
 
-debiasing_head = 'HardDebias' #'CosineDist' # 'EqualisingLoss'
+debiasing_head = 'CosineDist' # 'EqualisingLoss'
 
 if ON_SET:
     logging.basicConfig(filename=exp_path+'measure_bias'+demo+'.log', filemode='w', level=logging.DEBUG, format='%(asctime)s %(message)s')
@@ -77,7 +78,7 @@ if ON_SET:
         # race_df_2 = race_df_2.dropna()
         # pretrained_model = 'microsoft/DialoGPT-small' # 'gpt2' # 'roberta-base' # 'bert-base-uncased' #  #'ctrl'
         # "microsoft/DialoGPT-small" # 'ctrl' # 'openai-gpt' # 'minimaxir/reddit' # 'xlnet-large-cased'
-        pretrained_model = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/orientation/hard_debias/'
+        pretrained_model = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/religion1/eq_loss/'
         tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
         # model = AutoModelWithLMHead.from_pretrained(pretrained_model)
 
@@ -164,14 +165,15 @@ for i, (p1, p2) in enumerate(zip(race_1_perplexity, race_2_perplexity)):
         print(race_df.iloc[i].values)
         print(race_df_2.iloc[i].values)
 
-# reduced_race_df = race_df[(race_df['perplexity'] < 50000) & (race_df_2['perplexity'] < 50000)]
-# reduced_race_df_2 = race_df_2[(race_df['perplexity'] < 50000) & (race_df_2['perplexity'] < 50000)]
-#
-# print('DF shape after reducing {}'.format(reduced_race_df.shape))
-# print('DF 2 shape after reducing {}'.format(reduced_race_df_2.shape))
-#
-# reduced_race_df.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + input_file_suffix + '_reduced.csv', index=False)
-# reduced_race_df_2.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_2 + input_file_suffix + '_reduced.csv', index=False)
+if REDUCE_SET:
+    reduced_race_df = race_df[(race_df['perplexity'] < 50000) & (race_df_2['perplexity'] < 50000)]
+    reduced_race_df_2 = race_df_2[(race_df['perplexity'] < 50000) & (race_df_2['perplexity'] < 50000)]
+
+    print('DF shape after reducing {}'.format(reduced_race_df.shape))
+    print('DF 2 shape after reducing {}'.format(reduced_race_df_2.shape))
+
+    reduced_race_df.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + input_file_suffix + '_reduced.csv', index=False)
+    reduced_race_df_2.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_2 + input_file_suffix + '_reduced.csv', index=False)
 
 '''
 if ON_SET:

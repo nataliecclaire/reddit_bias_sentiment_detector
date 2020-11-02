@@ -30,7 +30,7 @@ else:
     with open(data_path + demo + '/' + 'religion2_muslims.txt') as f:
         attributes = [re.sub('[*"]', '', line.split('\n')[0]) for line in f]
     ignore_attr = []
-    extra_attr = ['thugs']
+    extra_attr = ['thugs', 'judaism', 'christianity', 'jewish']
     extra_ignore_attr = ['lazy sheik', 'oil sheik', 'belly dancers', 'vielded', 'viel', 'power-hungry',
                          'wealthy oilmen', 'harem maiden', 'headscarves', 'charlatan']
 

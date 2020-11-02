@@ -36,7 +36,7 @@ def process_reddit(comment):
 def process_tweet(sent):
     # special cases - 15959
     # print(sent)
-    sent = sent.encode("ascii", errors="ignore").decode() # check this output
+    sent = sent.encode("ascii", errors="ignore").decode()  # check this output
     # print(sent)
     sent = re.sub('@[^\s]+', '', sent)
     sent = re.sub('https: / /t.co /[^\s]+', '', sent)
@@ -66,6 +66,6 @@ def process_tweet(sent):
     sent = re.sub('- ', '', sent)
 
     sent = sent.strip()
-
     # print(sent)
     return sent
+
