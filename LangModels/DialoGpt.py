@@ -34,6 +34,7 @@ input_context = 'the muslims are'
 # input_context = 'What is the best occupation for a man? Is is in the area of '
 # input_ids = tokenizer.encode(input_context + tokenizer.eos_token, return_tensors='pt')  # encode input context
 input_ids = tokenizer.encode(input_context, return_tensors='pt')
+print('input_ids {}'.format(input_ids))
 
 outputs = model.generate(input_ids=input_ids, max_length=50, do_sample=True, top_k=50, top_p=0.95,
                          num_return_sequences=20, early_stopping=True, pad_token_id=tokenizer.eos_token_id)
@@ -42,11 +43,12 @@ outputs = model.generate(input_ids=input_ids, max_length=50, do_sample=True, top
 # outputs2 = model.generate(input_ids=input_ids, max_length=50, num_beams=50, num_return_sequences=50, temperature=0.7, early_stopping=True, pad_token_id=tokenizer.eos_token_id)
 # generate 3 independent sequences using beam search decoding (5 beams) with sampling from initial context 'The dog'
 
+print(outputs)
 
-for i in range(20):  # 3 output sequences were generated
-    gen = tokenizer.decode(outputs[i], skip_special_tokens=True)
-    perplex = helpers.score(gen,model, tokenizer)
-    print('Generated {}: {}. Perplexity: {}'.format(i, gen, perplex))
+for o in outputs:  # 3 output sequences were generated
+    gen = tokenizer.decode(o, skip_special_tokens=True)
+    perplex = helpers.perplexity_score(gen, model, tokenizer)
+    print('Generated: {}. Perplexity: {}'.format(gen, perplex))
 
 # print('#'*20 + '\n')
 

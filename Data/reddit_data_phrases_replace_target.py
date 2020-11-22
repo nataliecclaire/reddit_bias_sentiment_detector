@@ -4,9 +4,9 @@ from utils import reddit_helpers as rh
 
 
 data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/'
-demo = 'orientation' # 'religion1' # 'religion2' # 'race' # 'gender' #
-demo_1 = 'lgbtq' # 'jews' # 'muslims' # 'black_pos' # 'female' # 'black' # 'jews'
-demo_2 = 'straight' # 'christians' # 'white_pos' # 'male' #  # 'white'
+demo = 'race' # 'gender' # 'orientation' # 'religion1' # 'religion2' # 'race' #
+demo_1 = 'black' # 'female' # 'lgbtq' # 'jews' # 'muslims' # 'black_pos' # 'jews'
+demo_2 = 'white' # 'male' # 'straight' # 'christians' # 'white_pos'
 type_file = 'bias' # 'bias_unbias'
 output_file_suffix = '_processed_phrase_biased' # '_processed_phrase_biased_unbiased'
 
@@ -41,12 +41,13 @@ elif demo == 'religion2':
 elif demo == 'gender':
     pairs = (('woman', 'man'), ('women', 'men'), ('girl', 'boy'), ('mother', 'father'), ('daughter', 'son'), ('wife', 'husband'),
              ('niece', 'nephew'), ('mom', 'dad'), ('bride', 'groom'), ('lady', 'gentleman'), ('madam', 'sir'),
-             ('hostess', 'host'), ('female', 'male'), ('wife', 'husband'), ('aunt', 'uncle'), ('sister', 'brother'), (' she ', ' he '))
-else:
+             ('hostess', 'host'), ('female', 'male'), ('aunt', 'uncle'), ('sister', 'brother'), (' she ', ' he '))
+elif demo == 'orientation':
     pairs = (('gay', 'straight'), ('gays', 'straight'), ('lesbian', 'straight'), ('lesbians', 'straight'), ('bisexual', 'monosexual'),
              ('bisexuals', 'monosexuals'), ('homosexual', 'heterosexual'), ('homosexuals', 'heterosexuals'), ('transgender', 'cisgender'),
              ('transgenders', 'cisgenders'), ('sapphic', 'heterosexual'), ('pansexual', 'heterosexual'), ('queer', 'heterosexual'))
-
+else:
+    raise ValueError("Specify correct demographic")
 
 for idx, row in demo1_df_processed.iterrows():
     initial_demo = []

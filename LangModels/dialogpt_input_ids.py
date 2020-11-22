@@ -13,12 +13,23 @@ pretrained_model = 'microsoft/DialoGPT-small' # 'gpt2' # 'roberta-base' # 'bert-
 tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
 model = AutoModelWithLMHead.from_pretrained(pretrained_model)
 
-with open(data_path + 'bias_annotated/orientation/orientation_bias_manual_train.txt') as f:
+with open(data_path + 'text_files/race/race_bias_manual_train.txt') as f:
     lines = [line.rstrip() for line in f]
 
 for sent in lines:
     print(sent)
     input_ids = tokenizer(sent, add_special_tokens=True, truncation=True, max_length=32)
     tokens = tokenizer.tokenize(sent)
+    print(input_ids)
+    print(tokens)
+
+sent = [' blacks whites', ' africans americans', ' african american', ' black white', ' negro caucasian',
+        ' negroes caucasians', 'black is', 'white is', 'blacks are', 'whites are', 'african is', 'american is',
+        'africans are', 'americans are', 'negro is', 'caucasian is', 'negroes are', 'caucasians are']
+
+for s in sent:
+    print(s)
+    input_ids = tokenizer(s, add_special_tokens=True, truncation=True, max_length=32)
+    tokens = tokenizer.tokenize(s)
     print(input_ids)
     print(tokens)

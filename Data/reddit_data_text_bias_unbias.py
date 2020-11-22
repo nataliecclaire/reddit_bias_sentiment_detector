@@ -8,16 +8,16 @@ def build_dataset_manual_annot(df, dest_path):
 
     for idx, row in df.iterrows():
         comment = row['comments_processed']
-        data += '<bos> ' + comment + '\n'
+        data += comment + '\n'
 
     f.write(data)
 
 
 data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/'
-demo = 'religion2' # 'religion1' # 'orientation' # 'race' # 'gender' #  # 'race'  # 'race' #'gender' # 'religion'
-demo_1 = 'muslims' # 'jews' # 'lgbtq'
-demo_2 = 'christians' # 'straight' # 'christians'
-desti_path = data_path + 'bias_annotated/' + demo + '/'
+demo = 'gender'  # 'orientation' # 'religion2' # 'religion1' # 'race'
+demo_1 = 'female'  # 'lgbtq' # 'muslims' # 'jews'
+demo_2 = 'male'  # 'straight' # 'christians' # 'christians'
+desti_path = data_path + 'text_files/' + demo + '/'
 
 
 df_train_1 = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + '_processed_phrase_biased_trainset' + '.csv')

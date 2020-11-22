@@ -40,6 +40,22 @@ def get_model_perplexity(df, m, t):
     return model_perplexity
 
 
+def find_anomalies(data):
+    anomalies = []
+
+    random_data_std = np.std(data)
+    random_data_mean = np.mean(data)
+    anomaly_cut_off = random_data_std * 3
+
+    lower_limit = random_data_mean - anomaly_cut_off
+    upper_limit = random_data_mean + anomaly_cut_off
+    # Generate outliers
+    for outlier in data:
+        if outlier > upper_limit or outlier < lower_limit:
+            anomalies.append(outlier)
+    return anomalies
+
+
 start = time.time()
 
 data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/'
@@ -47,10 +63,10 @@ exp_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Exp
 
 ON_SET = True
 GET_PERPLEXITY = True
+REDUCE_SET = True
 
-demo = 'religion2' # 'religion1' # 'orientation' # 'race' # 'gender' # 'race'  #
-demo_1 = 'muslims' # 'jews' # 'lgbtq' # 'black' # 'female' # 'black_pos' # 'muslims' #
-demo_2 = 'christians' # 'straight' # 'white'  # 'male' # 'white_pos'  # 'white'
+demo = 'gender' # 'orientation' # 'religion2' # 'religion1' # 'race' # 'race'  #
+demo_1 = 'female' # 'lgbtq' # 'muslims' # 'jews' # 'black' # 'black_pos' # 'muslims
 input_file_biased = '_processed_phrase_biased_testset' # '_processed_phrase_biased' # '_processed_phrase_biased_testset' # '_processed_sent_biased' # '_processed'
 input_file_unbiased = '_processed_phrase_unbiased_testset_pos_attr'
 
@@ -64,111 +80,86 @@ else:
 pd.set_option('max_colwidth', 600)
 pd.options.display.max_columns = 10
 
-if ON_SET:
-    if GET_PERPLEXITY:
+if GET_PERPLEXITY:
 
-        logging.info('Calculating perplexity')
-        race_df = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + input_file_biased + '.csv')
-        race_df_2 = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + input_file_unbiased + '.csv')
+    logging.info('Calculating perplexity')
+    race_df = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + input_file_biased + '.csv')
+    race_df_2 = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + input_file_unbiased + '.csv')
 
-        # race_df = race_df.dropna()
-        # race_df_2 = race_df_2.dropna()
-        pretrained_model = 'microsoft/DialoGPT-small' # 'gpt2' # 'roberta-base' # 'bert-base-uncased' #'ctrl'
-        # "microsoft/DialoGPT-small" # 'ctrl' # 'openai-gpt' # 'minimaxir/reddit' # 'xlnet-large-cased'
-        # pretrained_model = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/religion1/normal_biased_data_allt/'
-        tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
-        model = AutoModelWithLMHead.from_pretrained(pretrained_model)
-        # model = AutoModelWithLMAndDebiasHead.from_pretrained(pretrained_model, debiasing_head=debiasing_head)
-        # model = AutoModelForMaskedLM.from_pretrained(pretrained_model)
-        # model = AutoModelForCausalLM.from_pretrained(pretrained_model)
+    # race_df = race_df.dropna()
+    # race_df_2 = race_df_2.dropna()
+    pretrained_model = 'microsoft/DialoGPT-small' # 'gpt2' # 'roberta-base' # 'bert-base-uncased' #'ctrl'
+    # "microsoft/DialoGPT-small" # 'ctrl' # 'openai-gpt' # 'minimaxir/reddit' # 'xlnet-large-cased'
+    # pretrained_model = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/religion1/normal_biased_data_allt/'
+    tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
+    # model = AutoModelWithLMHead.from_pretrained(pretrained_model)
+    # model = AutoModelWithLMAndDebiasHead.from_pretrained(pretrained_model, debiasing_head=debiasing_head)
+    # model = AutoModelForMaskedLM.from_pretrained(pretrained_model)
+    model = AutoModelForCausalLM.from_pretrained(pretrained_model)
 
-        race_1_perplexity = get_perplexity_list(race_df, model, tokenizer)
-        print('Done with demo1 perplexity in {} on set'.format((time.time() - start)/60))
-        race_2_perplexity = get_perplexity_list(race_df_2, model, tokenizer)
+    race_1_perplexity = get_perplexity_list(race_df, model, tokenizer)
+    print('Done with demo1 perplexity in {} on set'.format((time.time() - start)/60))
+    race_2_perplexity = get_perplexity_list(race_df_2, model, tokenizer)
 
-        model_perp = get_model_perplexity(race_df, model, tokenizer)
-        print('Model perplexity {}'.format(model_perp))
+    # model_perp = get_model_perplexity(race_df, model, tokenizer)
+    # print('Model perplexity {}'.format(model_perp))
 
-        logging.info('Time to get perplexity scores {}'.format((time.time() - start)/60))
-        race_df['perplexity'] = race_1_perplexity
-        race_df_2['perplexity'] = race_2_perplexity
+    logging.info('Time to get perplexity scores {}'.format((time.time() - start)/60))
+    race_df['perplexity'] = race_1_perplexity
+    race_df_2['perplexity'] = race_2_perplexity
 
-        # race_df.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + output_file_suffix + '.csv')
-        # race_df_2.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_2 + output_file_suffix +'.csv')
-    else:
-        logging.info('Getting saved perplexity')
-        print('Getting saved perplexity')
-        race_df = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + output_file_suffix +'.csv')
-        race_df_2 = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_2 + output_file_suffix +'.csv')
-        race_1_perplexity = race_df['perplexity']
-        race_2_perplexity = race_df_2['perplexity']
+    # race_df.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + output_file_suffix + '.csv')
+    # race_df_2.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_2 + output_file_suffix +'.csv')
+else:
+    logging.info('Getting saved perplexity')
+    print('Getting saved perplexity')
+    race_df = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + output_file_suffix +'.csv')
+    race_df_2 = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_2 + output_file_suffix +'.csv')
+    race_1_perplexity = race_df['perplexity']
+    race_2_perplexity = race_df_2['perplexity']
 
-logging.debug('Instances in demo 1 and 2: {}, {}'.format(len(race_1_perplexity), len(race_2_perplexity)))
-logging.debug('Mean and variance of unfiltered perplexities demo1 - Mean {}, Variance {}'.format(np.mean(race_1_perplexity), np.var(race_1_perplexity)))
-logging.debug('Mean and variance of unfiltered perplexities demo2 - Mean {}, Variance {}'.format(np.mean(race_2_perplexity), np.var(race_2_perplexity)))
-
-print('Mean and variance of unfiltered perplexities demo1 - Mean {}, Variance {}'.format(np.mean(race_1_perplexity), np.var(race_1_perplexity)))
-print('Mean and variance of unfiltered perplexities demo2 - Mean {}, Variance {}'.format(np.mean(race_2_perplexity), np.var(race_2_perplexity)))
+print('Instances in demo 1 and 2: {}, {}'.format(len(race_1_perplexity), len(race_2_perplexity)))
+print('Mean and Std of unfiltered perplexities demo1 - Mean {}, Variance {}'.format(np.mean(race_1_perplexity), np.std(race_1_perplexity)))
+print('Mean and Std of unfiltered perplexities demo2 - Mean {}, Variance {}'.format(np.mean(race_2_perplexity), np.std(race_2_perplexity)))
 
 assert len(race_1_perplexity) == len(race_2_perplexity)
-print(len(race_1_perplexity))
 
-race_1_p = []
-race_2_p = []
+demo1_out = find_anomalies(np.array(race_1_perplexity))
+demo2_out = find_anomalies(np.array(race_2_perplexity))
 
-logging.info('Filtering out perplexities more than 5000')
-
+print(demo1_out, demo2_out)
+demo1_in = [d1 for d1 in race_1_perplexity if d1 not in demo1_out]
+demo2_in = [d2 for d2 in race_2_perplexity if d2 not in demo2_out]
 
 for i, (p1, p2) in enumerate(zip(race_1_perplexity, race_2_perplexity)):
-    if p1 < 50000 and p2 < 50000:
-        race_1_p.append(p1)
-        race_2_p.append(p2)
-    else:
-        print('extreme perplexity d1 {}, d2 {}'.format(p1, p2))
-        print(race_df.iloc[i].values)
-        print(race_df_2.iloc[i].values)
+    if p1 in demo1_out or p2 in demo2_out:
+        race_df.drop(race_df.loc[race_df['perplexity'] == p1].index, inplace=True)
+        race_df_2.drop(race_df_2.loc[race_df_2['perplexity'] == p2].index, inplace=True)
 
-# reduced_race_df = race_df[(race_df['perplexity'] < 50000) & (race_df_2['perplexity'] < 50000)]
-# reduced_race_df_2 = race_df_2[(race_df['perplexity'] < 50000) & (race_df_2['perplexity'] < 50000)]
-#
-# print('DF shape after reducing {}'.format(reduced_race_df.shape))
-# print('DF 2 shape after reducing {}'.format(reduced_race_df_2.shape))
-#
-# reduced_race_df.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + input_file_suffix + '_reduced.csv', index=False)
-# reduced_race_df_2.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_2 + input_file_suffix + '_reduced.csv', index=False)
+if REDUCE_SET:
+    print('DF shape after reducing {}'.format(race_df.shape))
+    print('DF 2 shape after reducing {}'.format(race_df_2.shape))
 
-logging.info('Saving perplexity difference for each pair of sentence')
+    race_df.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + input_file_biased + '_neg_attr_reduced.csv', index=False)
+    race_df_2.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + input_file_unbiased + '_reduced.csv', index=False)
 
-dif = np.array(race_1_perplexity) - np.array(race_2_perplexity)
 
-logging.debug('Mean and variance of filtered perplexities demo1 - Mean {}, Variance {}'.format(np.mean(race_1_p), np.var(race_1_p)))
-logging.debug('Mean and variance of filtered perplexities demo2 - Mean {}, Variance {}'.format(np.mean(race_2_p), np.var(race_2_p)))
-logging.debug('Instances in filtered demo 1 and 2: {}, {}'.format(len(race_1_p), len(race_2_p)))
-
-print('Mean and variance of filtered perplexities demo1 - Mean {}, Variance {}'.format(np.mean(race_1_p), np.var(race_1_p)))
-print('Mean and variance of filtered perplexities demo2 - Mean {}, Variance {}'.format(np.mean(race_2_p), np.var(race_2_p)))
-
-print('mean of difference {}'.format(np.mean(dif)))
-print('Var of difference {}'.format(np.var(dif)))
+print('Mean and Std of filtered perplexities demo1 - Mean {}, Variance {}'.format(np.mean(race_df['perplexity']),
+                                                                                  np.std(race_df['perplexity'])))
+print('Mean and Std of filtered perplexities demo2 - Mean {}, Variance {}'.format(np.mean(race_df_2['perplexity']),
+                                                                                  np.std(race_df_2['perplexity'])))
 
 t_value, p_value = stats.ttest_ind(race_1_perplexity, race_2_perplexity, equal_var=False)
 
-logging.info('Unfiltered perplexities - T value {} and P value {}'.format(t_value, p_value))
+print('Unfiltered perplexities - T value {} and P value {}'.format(t_value, p_value))
 print(t_value, p_value)
-print(len(race_1_p), len(race_2_p))
 
-# print(race_1_p)
-# print(race_2_p)
-dif2 = np.array(race_1_p) - np.array(race_2_p)
+print(len(race_df['perplexity']), len(race_df_2['perplexity']))
 
-print('mean of difference {}'.format(np.mean(dif2)))
-print('Var of difference {}'.format(np.var(dif2)))
+t_unpaired, p_unpaired = stats.ttest_ind(race_df['perplexity'].to_list(), race_df_2['perplexity'].to_list(), equal_var=False)
+print('Student(unpaired) t-test, after outlier removal: t-value {}, p-value {}'.format(t_unpaired, p_unpaired))
 
-t_vt, p_vt = stats.ttest_ind(race_1_p, race_2_p)
-logging.info('Filtered perplexities - T value {} and P value {}'.format(t_vt, p_vt))
-print(t_vt, p_vt)
-
-t_vf, p_vf = stats.ttest_ind(race_1_p, race_2_p, equal_var=False)
-print(t_vf, p_vf)
+t_paired, p_paired = stats.ttest_rel(race_df['perplexity'].to_list(), race_df_2['perplexity'].to_list())
+print('Paired t-test, after outlier removal: t-value {}, p-value {}'.format(t_paired, p_paired))
 
 logging.info('Total time taken {}'.format((time.time() - start)/60))

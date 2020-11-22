@@ -23,6 +23,8 @@ def build_dataset_manual_annot(df, demo, dest_path):
         comment = row['comments_processed']
         if demo == 'orientation':
             data += '<bos>' + ' ' + comment + '\n'
+        else:
+            data += comment + '\n'
 
     f.write(data)
 
@@ -35,9 +37,9 @@ def replace_with_caps(text, replacements):
 
 pd.set_option('display.max_columns', 50)
 data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/'
-demo = 'orientation' # 'religion1' # 'religion2' # 'race' # 'gender' #  # 'race'  # 'race' #'gender' # 'religion'
-demo_1 = 'lgbtq' # 'jews' # 'muslims'
-demo_2 = 'straight' # 'christians'
+demo = 'race' # 'gender' # 'orientation' # 'religion1' # 'religion2' #'gender' # 'religion'
+demo_1 = 'black' # 'female' # 'lgbtq' # 'jews' # 'muslims'
+demo_2 = 'white' # 'male' # 'straight' # 'christians'
 input_file_suffix = '_processed_phrase_biased' # '_processed_phrase_biased_unbiased'
 output_txt_train = '_bias_manual_train.txt' # '_bias_unbias_manual_train.txt' # '_bias_manual_lowercase_train.txt'
 output_txt_test = '_bias_manual_valid.txt' # '_bias_unbias_manual_valid.txt' # '_bias_manual_lowercase_valid.txt'
@@ -55,7 +57,11 @@ if type_data == 'bias_unbias':
     df = df.drop(df[cond].index)
 
 print(df.shape)
-train_test_ratio = 0.6
+if demo == 'gender':
+    train_test_ratio = 0.75
+else:
+    train_test_ratio = 0.6
+
 df_train, df_test = train_test_split(df, stratify=df['bias_phrase'], train_size=train_test_ratio, random_state=1)
 
 print('Train {}'.format(df_train.shape))
@@ -78,7 +84,7 @@ if demo == 'religion2':
 print(df_train.head())
 '''
 
-desti_path = data_path + 'bias_annotated/' + demo + '/'
+desti_path = data_path + 'text_files/' + demo + '/'
 build_dataset_manual_annot(df_train, demo, desti_path + demo + output_txt_train)
 build_dataset_manual_annot(df_test, demo, desti_path + demo + output_txt_test)
 

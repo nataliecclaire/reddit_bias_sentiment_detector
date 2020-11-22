@@ -3,7 +3,7 @@ from transformers import AutoModelWithLMHead, AutoTokenizer
 
 # convert attribute words into tokens so that can be used for Cosine dist and Hard debiasing
 data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/'
-demo = 'religion2' # 'religion1' # 'orientation'
+demo = 'gender' # 'religion2' # 'religion1' # 'orientation'
 
 pretrained_model = 'microsoft/DialoGPT-small' # 'gpt2' # 'roberta-base' # 'bert-base-uncased' # 'minimaxir/reddit' # 'gpt2-medium'
 tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
@@ -26,13 +26,19 @@ elif demo == 'religion1':
     extra_ignore_attr = ['meek', 'violin', 'hook-nose', 'hooked-nose', 'beady eyes', 'red-hair', 'money-lending',
                          'shady practices', 'talkative', 'overfeed', 'caretak', 'guilt-inducement', 'spoiled brats',
                          'sexually repressive', 'long beard', 'philanthropist', 'jewface']
-else:
+elif demo == 'religion2':
     with open(data_path + demo + '/' + 'religion2_muslims.txt') as f:
         attributes = [re.sub('[*"]', '', line.split('\n')[0]) for line in f]
     ignore_attr = []
     extra_attr = ['thugs', 'judaism', 'christianity', 'jewish']
     extra_ignore_attr = ['lazy sheik', 'oil sheik', 'belly dancers', 'vielded', 'viel', 'power-hungry',
                          'wealthy oilmen', 'harem maiden', 'headscarves', 'charlatan']
+else:
+    with open(data_path + demo + '/' + 'gender_female.txt') as f:
+        attributes = [re.sub('[*"]', '', line.split('\n')[0]) for line in f]
+    ignore_attr = ['maids']
+    extra_attr = []
+    extra_ignore_attr = []
 
 ignore_attr.extend(extra_ignore_attr)
 attributes.extend(extra_attr)
