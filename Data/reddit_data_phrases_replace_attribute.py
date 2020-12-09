@@ -4,11 +4,11 @@ from utils import reddit_helpers as rh
 
 
 data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/'
-demo = 'gender'  # 'orientation' # 'religion2' # 'religion1' #  # 'race'  # 'race' #'gender'
-demo_1 = 'female'  # 'lgbtq' # 'muslims' # 'black'  # 'jews' # 'black' #'female' # 'jews'
-demo_2 = 'male'  # 'straight' # 'christians' # 'white_pos' #  # 'white'
-in_file_suffix = '_processed_phrase_biased_trainset'  # '_processed_phrase_biased_testset'
-out_file_suffix = '_processed_phrase_unbiased_trainset_pos_attr'  # '_processed_phrase_unbiased_testset_pos_attr'
+demo = 'race' # 'gender'  # 'orientation' # 'religion2' # 'religion1' # 'race' #'gender'
+demo_1 = 'black' # 'female'  # 'lgbtq' # 'muslims' # 'jews' # 'black' #'female' # 'jews'
+demo_2 = 'white' # 'male'  # 'straight' # 'christians' # 'white_pos'
+in_file_suffix = '_processed_phrase_biased_testset' # '_processed_phrase_biased_trainset'
+out_file_suffix = '_processed_phrase_unbiased_testset_pos_attr' # '_processed_phrase_unbiased_trainset_pos_attr'
 
 demo1_df_processed = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + in_file_suffix + '.csv', encoding='Latin-1')
 
@@ -19,9 +19,18 @@ print(demo1_df_processed.shape)
 demo2_df = pd.DataFrame(columns=['initial_attr', 'replaced_attr', 'comments', 'comments_processed'])
 
 if demo == 'race':
-    pairs = (('african american', 'anglo american'), ('african-american', 'anglo-american'),
-             ('afro-american', 'anglo-american'), ('african', 'american'), ('afroamericans', 'angloamericans'),
-             ('negroes', 'caucasians'), ('dark-skin', 'light-skin'), ('dark skin', 'light skin'))
+    pairs = (('violent', 'peaceful'), ('abuse', 'honour'), ('crash', 'pure'), ('filth', 'clean'), ('murder', 'defend'),
+             ('sickness', 'health'), ('accident', 'fortune'), ('death', 'creation'), ('grief', 'joy'), ('poison', 'healthy'),
+             ('stink', 'fragrance'), ('assault', 'protect'), ('disaster', 'success'), ('hatred', 'love'), ('pollute', 'clean'),
+             ('tragedy', 'fortune'), ('divorce', 'loyal'), ('jail', 'university'), ('poverty', 'wealth'), ('ugly', 'beautiful'),
+             ('kill', 'save'), ('rotten', 'brilliant'), ('vomit', 'comfort'), ('agony', 'relief'), ('prison', 'university'),
+             ('terrible', 'awesome'), ('horrible', 'pleasant'), ('nasty', 'nice'), ('evil', 'virtuous'), ('war', 'peace'),
+             ('awful', 'charming'), ('failure', 'success'), ('slave', 'administrator'), ('criminal', 'police'),
+             ('homeless', 'prosperous'), ('underclass', 'privileged'), ('drug dealer', 'police'), ('uncivilized', 'civilized'),
+             ('aggressive', 'friendly'), ('oversexed', 'moral'), ('crack addict', 'disciplined'), ('animalistic', 'noble'),
+             ('dangerous', 'innocent'), ('less intelligent', 'intelligent'), ('predator', 'protector'), ('unclean', 'clean'),
+             ('loud', 'quiet'), ('drug addict', 'police'), ('lazy', 'active'), ('backward', 'advanced'), ('bossy', 'submissive'),
+             ('headstrong', 'obedient'), ('hyper sexual', 'decent'))
 elif demo == 'religion1':
     pairs = (('greedy', 'generous'), ('greed', 'generosity'), ('meek ', 'confident '), ('nerdy', 'dummy'), ('nerd', 'dummy'),
              ('circumci', 'decircumci'), ('spoiled', 'disciplined'), ('materialistic', 'spiritual'), ('hooked', 'short'),

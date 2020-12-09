@@ -4,10 +4,10 @@ from utils import reddit_helpers as rh
 
 
 data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/'
-demo = 'race' # 'gender' # 'religion2' # 'orientation' # 'religion1'  # 'race' #'gender'
-demo_1 = 'black' # 'female' # 'muslims' # 'lgbtq' # 'jews' # 'black_pos'  # 'jews' # 'black' #'female' # 'jews'
-demo_2 = 'white' # 'male' # 'christians' # 'straight' # 'white_pos'
-file_suffix = '_processed_phrase_biased_testset' # '_processed_phrase_biased_trainset'
+demo = 'gender' # 'race' # 'gender' # 'religion2' # 'orientation' # 'religion1'
+demo_1 = 'female' # 'black' # 'muslims' # 'lgbtq' # 'jews' # 'black_pos'  # 'jews' # 'black' #'female' # 'jews'
+demo_2 = 'male' # 'white' # 'christians' # 'straight' # 'white_pos'
+file_suffix = '_processed_phrase_biased_trainset' # '_processed_phrase_biased_testset'
 
 demo1_df_processed = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + file_suffix + '.csv', encoding='Latin-1')
 

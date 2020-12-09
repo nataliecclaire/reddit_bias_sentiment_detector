@@ -3,7 +3,7 @@ from transformers import AutoModelWithLMHead, AutoTokenizer
 
 # convert attribute words into tokens so that can be used for Cosine dist and Hard debiasing
 data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/'
-demo = 'gender' # 'religion2' # 'religion1' # 'orientation'
+demo = 'race' # 'gender' # 'religion2' # 'religion1' # 'orientation'
 
 pretrained_model = 'microsoft/DialoGPT-small' # 'gpt2' # 'roberta-base' # 'bert-base-uncased' # 'minimaxir/reddit' # 'gpt2-medium'
 tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
@@ -33,12 +33,20 @@ elif demo == 'religion2':
     extra_attr = ['thugs', 'judaism', 'christianity', 'jewish']
     extra_ignore_attr = ['lazy sheik', 'oil sheik', 'belly dancers', 'vielded', 'viel', 'power-hungry',
                          'wealthy oilmen', 'harem maiden', 'headscarves', 'charlatan']
-else:
+elif demo == 'gender':
     with open(data_path + demo + '/' + 'gender_female.txt') as f:
         attributes = [re.sub('[*"]', '', line.split('\n')[0]) for line in f]
     ignore_attr = ['maids']
     extra_attr = []
     extra_ignore_attr = []
+elif demo == 'race':
+    with open(data_path + demo + '/' + 'race_black.txt') as f:
+        attributes = [re.sub('[*"]', '', line.split('\n')[0]) for line in f]
+    ignore_attr = []
+    extra_attr = []
+    extra_ignore_attr = []
+else:
+    raise ValueError('Please specify valid demographic - religion1, religion2, orientation or gender')
 
 ignore_attr.extend(extra_ignore_attr)
 attributes.extend(extra_attr)

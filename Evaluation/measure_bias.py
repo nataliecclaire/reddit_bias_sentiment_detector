@@ -69,15 +69,16 @@ ON_TESTSET = False
 GET_PERPLEXITY_TEST = False
 REDUCE_SET = False # set to true to save dataset with outliers removed
 
-demo = 'gender' # 'religion2' # 'race' # 'orientation' # 'religion1' # '' # 'gender' # 'religion2
-demo_1 = 'female' # 'muslims' # 'jews' # 'black' # 'lgbtq' # 'black_pos' # '' #
-demo_2 = 'male' # 'christians' # 'white' # 'straight' # 'white_pos'  # 'white' #'christians2'
-input_file_suffix = '_processed_phrase_biased_testset' # '_processed_phrase_biased_testset_reduced' # '_processed_phrase_biased' # '_processed_sent_biased' # '_processed'
+demo = 'religion1' # 'gender' # 'religion2' # 'race' # 'orientation' # '' # '' # 'gender' # 'religion2
+demo_1 = 'jews' # 'female' # 'muslims' # 'black' # 'lgbtq' # 'black_pos' # '' #
+demo_2 = 'christians' # 'male' # 'white' # 'straight' # 'white_pos'  # 'white' #'christians2'
+input_file_suffix = '_biased_valid_reduced' # '_processed_phrase_biased_testset' # '_processed_phrase_biased' # '_processed_sent_biased' # '_processed'
 output_file_suffix = '_perplex_phrase_biased' # '_perplex'
 
 debiasing_head = 'EqualisingLoss' # 'CosineDist'
-pretrained_model = 'microsoft/DialoGPT-small'
-    # '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/models/religion1/eq_loss_hps/'
+pretrained_model = 'microsoft/DialoGPT-small' # 'bert_base_uncased' # 'gpt2'
+    # '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/models/religion1/eq_loss_0/'
+    # 'microsoft/DialoGPT-small'
     # '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/models/religion2/lm_loss_swapped_targets/'
 
 if ON_SET:
@@ -100,11 +101,16 @@ if GET_PERPLEXITY:
     # "microsoft/DialoGPT-small" # 'ctrl' # 'openai-gpt' # 'minimaxir/reddit' # 'xlnet-large-cased'
     # pretrained_model = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/religion1/eq_loss/'
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
-    # model = AutoModelWithLMHead.from_pretrained(pretrained_model)
+    model = AutoModelWithLMHead.from_pretrained(pretrained_model)
 
     # model = AutoModelWithLMAndDebiasHead.from_pretrained(pretrained_model, debiasing_head=debiasing_head)
     # model = AutoModelForMaskedLM.from_pretrained(pretrained_model)
-    model = AutoModelForCausalLM.from_pretrained(pretrained_model)
+    # model = AutoModelForCausalLM.from_pretrained(pretrained_model)
+
+    for n, p in model.named_parameters():
+        if 'wte.weight' in n:
+            print('model params {}, {}'.format(n, p))
+            print(p.shape)
 
     race_1_perplexity = get_perplexity_list(race_df, model, tokenizer)
     print('Done with demo1 perplexity in {} on set'.format((time.time() - start)/60))

@@ -65,12 +65,15 @@ ON_SET = True
 GET_PERPLEXITY = True
 REDUCE_SET = True
 
-demo = 'gender' # 'orientation' # 'religion2' # 'religion1' # 'race' # 'race'  #
-demo_1 = 'female' # 'lgbtq' # 'muslims' # 'jews' # 'black' # 'black_pos' # 'muslims
+demo = 'race' # 'gender' # 'orientation' # 'religion2' # 'religion1' # 'race'  #
+demo_1 = 'black' # 'female' # 'lgbtq' # 'muslims' # 'jews' # 'black_pos' # 'muslims
 input_file_biased = '_processed_phrase_biased_testset' # '_processed_phrase_biased' # '_processed_phrase_biased_testset' # '_processed_sent_biased' # '_processed'
 input_file_unbiased = '_processed_phrase_unbiased_testset_pos_attr'
 
 debiasing_head = 'EqualisingLoss'
+pretrained_model = 'microsoft/DialoGPT-small'  # 'gpt2' # 'roberta-base' # 'bert-base-uncased' #'ctrl'
+# "microsoft/DialoGPT-small" # 'ctrl' # 'openai-gpt' # 'minimaxir/reddit' # 'xlnet-large-cased'
+# pretrained_model = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/religion1/normal_biased_data_allt/'
 
 if ON_SET:
     logging.basicConfig(filename=exp_path+'measure_bias_attr_swap_'+demo+'.log', filemode='w', level=logging.DEBUG, format='%(asctime)s %(message)s')
@@ -81,16 +84,12 @@ pd.set_option('max_colwidth', 600)
 pd.options.display.max_columns = 10
 
 if GET_PERPLEXITY:
-
     logging.info('Calculating perplexity')
     race_df = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + input_file_biased + '.csv')
     race_df_2 = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + input_file_unbiased + '.csv')
 
     # race_df = race_df.dropna()
     # race_df_2 = race_df_2.dropna()
-    pretrained_model = 'microsoft/DialoGPT-small' # 'gpt2' # 'roberta-base' # 'bert-base-uncased' #'ctrl'
-    # "microsoft/DialoGPT-small" # 'ctrl' # 'openai-gpt' # 'minimaxir/reddit' # 'xlnet-large-cased'
-    # pretrained_model = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/religion1/normal_biased_data_allt/'
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
     # model = AutoModelWithLMHead.from_pretrained(pretrained_model)
     # model = AutoModelWithLMAndDebiasHead.from_pretrained(pretrained_model, debiasing_head=debiasing_head)
