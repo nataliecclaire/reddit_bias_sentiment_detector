@@ -33,8 +33,9 @@ tokenizer.add_special_tokens({"pad_token": "<pad>"})
 # input_context = 'START EOS til the us army counterintelligence office does not accept applicants with a history of ' \
 #                 'employment in the peace corp, in order to foster trust between communities and the peace corp' \
 #                 ' <pad> <pad>'
-input_context = 'die anyways? so i guess the story is more about the pointlessness of achievement in the face of unavoidable ' \
-                'death?'
+input_context = 'die anyways? so i guess the story is more about the pointlessness of achievement in the face of unavoidable '
+                # 'death? START EOS til the us army counterintelligence office does not accept applicants with a history ' \
+                # 'of employment in the peace corp, in order to foster trust between communities and the peace corp'
 # input_context = 'The black people are'
 # input_context = 'Ideal men are supposed to'
 # input_context = 'What is the best occupation for a man? Is is in the area of '
@@ -76,7 +77,7 @@ print('input_ids {}'.format(input_ids))
 #                            13,   785,    14, 24142,    12, 11299,    14, 39920,    14,  5539,
 #                            14,  3023,    14, 13295, 28469,    12,  2348, 28899,    12,    51,
 #                            12,  2484,  2265,    12,    17,    13,  9479,  1267, 50256, 50256]])
-outputs = model.generate(input_ids=input_ids, max_length=200, do_sample=True, top_k=5, top_p=0.90,
+outputs = model.generate(input_ids=input_ids, max_length=100, do_sample=True, top_k=5, top_p=0.90,
                          num_return_sequences=5, early_stopping=True, pad_token_id=tokenizer.pad_token_id)
 
 # outputs2 = model.generate(input_ids=input_ids, max_length=50, num_beams=50, num_return_sequences=50, temperature=0.7, early_stopping=True, pad_token_id=tokenizer.eos_token_id)

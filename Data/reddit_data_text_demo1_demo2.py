@@ -14,9 +14,9 @@ def build_dataset_manual_annot(df, dest_path):
 
 
 data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/'
-demo = 'gender' # 'race' # 'orientation' # 'religion2' # 'religion1' #'gender' # 'religion'
-demo_1 = 'female' # 'black' # 'lgbtq' # 'muslims' # 'jews'
-demo_2 = 'male' # 'white' # 'straight' # 'christians' # 'christians'
+demo = 'orientation' # 'religion2' # 'religion1' # 'gender' # 'race' #'gender' # 'religion'
+demo_1 = 'lgbtq' # 'muslims' # 'jews' # 'female' # 'black'
+demo_2 = 'straight' # 'christians' # 'male' # 'white'
 desti_path = data_path + 'text_files/' + demo + '/'
 
 

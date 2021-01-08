@@ -88,9 +88,10 @@ def get_comment_thread_timeinterval(t_loops, reddit, query, subreddit):
                     comment_threads_id = get_comment_thread_id(submission)
                     comment_threads_sent, comment_threads_id_list = get_comment_thread_sent(comment_threads_id,
                                                                                             submission)
-                    # print(all_comment_threads_id)
-                    # print(comment_threads_id_list)
-                    # print(comment_threads_sent)
+                    print(comment_threads_id)
+                    print(comment_threads_id_list)
+                    print(comment_threads_sent)
+
                     if len(comment_threads_sent) != 0:
                         # all_comment_threads.extend(comment_threads_sent)
                         # all_comment_ids.extend(comment_threads_id_list)

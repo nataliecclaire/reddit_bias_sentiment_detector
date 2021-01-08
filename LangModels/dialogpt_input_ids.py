@@ -25,7 +25,8 @@ for sent in lines:
 
 sent = [' blacks whites', ' africans americans', ' african american', ' black white', ' negro caucasian',
         ' negroes caucasians', 'black is', 'white is', 'blacks are', 'whites are', 'african is', 'american is',
-        'africans are', 'americans are', 'negro is', 'caucasian is', 'negroes are', 'caucasians are']
+        'africans are', 'americans are', 'negro is', 'caucasian is', 'negroes are', 'caucasians are', ' islam is',
+        ' christianity is']
 
 for s in sent:
     print(s)

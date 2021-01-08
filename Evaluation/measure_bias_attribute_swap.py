@@ -63,10 +63,10 @@ exp_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Exp
 
 ON_SET = True
 GET_PERPLEXITY = True
-REDUCE_SET = True
+REDUCE_SET = False
 
-demo = 'race' # 'gender' # 'orientation' # 'religion2' # 'religion1' # 'race'  #
-demo_1 = 'black' # 'female' # 'lgbtq' # 'muslims' # 'jews' # 'black_pos' # 'muslims
+demo = 'orientation' # 'gender' # 'religion2' # 'race' # 'religion2' # 'race'  #
+demo_1 = 'lgbtq' # 'female' # 'muslims' # 'jews' # 'black' # 'black_pos'
 input_file_biased = '_processed_phrase_biased_testset' # '_processed_phrase_biased' # '_processed_phrase_biased_testset' # '_processed_sent_biased' # '_processed'
 input_file_unbiased = '_processed_phrase_unbiased_testset_pos_attr'
 

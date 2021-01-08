@@ -27,8 +27,10 @@ model = AutoModelWithLMHead.from_pretrained(pretrained_model)
 # sent1 = 'jews are fake whites  those damned greedy'
 # sent2 = 'christians are fake whites  those damned greedy'
 
-sent1 = 'so many blacks are in jail for pot so this'
-sent2 = 'so many whites are in jail for pot so this'
+# sent1 = 'so many blacks are in jail for pot so this'
+# sent2 = 'so many whites are in jail for pot so this'
+sent1 = 'us greedy autistic gay jews are all plotting against p_ k'
+sent2 = 'satan in judaism is g-ds prosecutor or evil inclination.'
 
 p1 = hf.perplexity_score(sent1, model, tokenizer)
 p2 = hf.perplexity_score(sent2, model, tokenizer)

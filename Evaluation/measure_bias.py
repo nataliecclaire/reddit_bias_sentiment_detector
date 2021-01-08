@@ -69,10 +69,10 @@ ON_TESTSET = False
 GET_PERPLEXITY_TEST = False
 REDUCE_SET = False # set to true to save dataset with outliers removed
 
-demo = 'religion1' # 'gender' # 'religion2' # 'race' # 'orientation' # '' # '' # 'gender' # 'religion2
-demo_1 = 'jews' # 'female' # 'muslims' # 'black' # 'lgbtq' # 'black_pos' # '' #
-demo_2 = 'christians' # 'male' # 'white' # 'straight' # 'white_pos'  # 'white' #'christians2'
-input_file_suffix = '_biased_valid_reduced' # '_processed_phrase_biased_testset' # '_processed_phrase_biased' # '_processed_sent_biased' # '_processed'
+demo = 'religion1' # 'orientation' # 'gender' # 'religion2' # 'race' # 'religion2
+demo_1 = 'jews' # 'lgbtq' # 'female' # 'muslims' # 'black' # 'black_pos'
+demo_2 = 'christians' # 'straight' # 'male' # 'white' # 'white_pos'  # 'white' #'christians2'
+input_file_suffix = '_processed_phrase_biased_testset' #'_processed_phrase_biased_testset_reduced' # '_biased_test_reduced' # '_processed_phrase_biased' # '_processed_sent_biased' # '_processed'
 output_file_suffix = '_perplex_phrase_biased' # '_perplex'
 
 debiasing_head = 'EqualisingLoss' # 'CosineDist'
@@ -101,16 +101,16 @@ if GET_PERPLEXITY:
     # "microsoft/DialoGPT-small" # 'ctrl' # 'openai-gpt' # 'minimaxir/reddit' # 'xlnet-large-cased'
     # pretrained_model = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/religion1/eq_loss/'
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
-    model = AutoModelWithLMHead.from_pretrained(pretrained_model)
+    # model = AutoModelWithLMHead.from_pretrained(pretrained_model)
 
     # model = AutoModelWithLMAndDebiasHead.from_pretrained(pretrained_model, debiasing_head=debiasing_head)
     # model = AutoModelForMaskedLM.from_pretrained(pretrained_model)
-    # model = AutoModelForCausalLM.from_pretrained(pretrained_model)
+    model = AutoModelForCausalLM.from_pretrained(pretrained_model)
 
-    for n, p in model.named_parameters():
-        if 'wte.weight' in n:
-            print('model params {}, {}'.format(n, p))
-            print(p.shape)
+    # for n, p in model.named_parameters():
+    #     if 'wte.weight' in n:
+    #         print('model params {}, {}'.format(n, p))
+    #         print(p.shape)
 
     race_1_perplexity = get_perplexity_list(race_df, model, tokenizer)
     print('Done with demo1 perplexity in {} on set'.format((time.time() - start)/60))
@@ -172,6 +172,8 @@ demo2_in = [d2 for d2 in race_2_perplexity if d2 not in demo2_out]
 
 for i, (p1, p2) in enumerate(zip(race_1_perplexity, race_2_perplexity)):
     if p1 in demo1_out or p2 in demo2_out:
+        print('Outlier in demo1 is {}'.format(race_df.loc[race_df['perplexity'] == p1]))
+        print('Outlier in demo2 is {}'.format(race_df_2.loc[race_df_2['perplexity'] == p2]))
         race_df.drop(race_df.loc[race_df['perplexity'] == p1].index, inplace=True)
         race_df_2.drop(race_df_2.loc[race_df_2['perplexity'] == p2].index, inplace=True)
 
@@ -181,22 +183,25 @@ if REDUCE_SET:
     race_df.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + input_file_suffix + '_reduced.csv', index=False)
     race_df_2.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_2 + input_file_suffix + '_reduced.csv', index=False)
 
-t_value, p_value = stats.ttest_ind(race_1_perplexity, race_2_perplexity, equal_var=False)
+    print(len(race_df['perplexity']), len(race_df_2['perplexity']))
+    print('Mean and std of filtered perplexities demo1 - Mean {}, Std {}'.format(np.mean(race_df['perplexity']),
+                                                                                 np.std(race_df['perplexity'])))
+    print('Mean and std of filtered perplexities demo2 - Mean {}, Std {}'.format(np.mean(race_df_2['perplexity']),
+                                                                                 np.std(race_df_2['perplexity'])))
 
+    t_unpaired, p_unpaired = stats.ttest_ind(race_df['perplexity'].to_list(), race_df_2['perplexity'].to_list(), equal_var=False)
+    print('Student(unpaired) t-test, after outlier removal: t-value {}, p-value {}'.format(t_unpaired, p_unpaired))
+
+    t_paired, p_paired = stats.ttest_rel(race_df['perplexity'].to_list(), race_df_2['perplexity'].to_list())
+    print('Paired t-test, after outlier removal: t-value {}, p-value {}'.format(t_paired, p_paired))
+
+t_value, p_value = stats.ttest_rel(race_1_perplexity, race_2_perplexity)
+
+print('Mean and std of unfiltered perplexities demo1 - Mean {}, Std {}'.format(np.mean(race_1_perplexity),
+                                                                               np.std(race_1_perplexity)))
+print('Mean and std of unfiltered perplexities demo2 - Mean {}, Std {}'.format(np.mean(race_2_perplexity),
+                                                                               np.std(race_2_perplexity)))
 print('Unfiltered perplexities - T value {} and P value {}'.format(t_value, p_value))
 print(t_value, p_value)
-
-print(len(race_df['perplexity']), len(race_df_2['perplexity']))
-print('Mean and std of filtered perplexities demo1 - Mean {}, Std {}'.format(np.mean(race_df['perplexity']),
-                                                                             np.std(race_df['perplexity'])))
-print('Mean and std of filtered perplexities demo2 - Mean {}, Std {}'.format(np.mean(race_df_2['perplexity']),
-                                                                             np.std(race_df_2['perplexity'])))
-
-
-t_unpaired, p_unpaired = stats.ttest_ind(race_df['perplexity'].to_list(), race_df_2['perplexity'].to_list(), equal_var=False)
-print('Student(unpaired) t-test, after outlier removal: t-value {}, p-value {}'.format(t_unpaired, p_unpaired))
-
-t_paired, p_paired = stats.ttest_rel(race_df['perplexity'].to_list(), race_df_2['perplexity'].to_list())
-print('Paired t-test, after outlier removal: t-value {}, p-value {}'.format(t_paired, p_paired))
 
 logging.info('Total time taken {}'.format((time.time() - start)/60))
