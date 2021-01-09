@@ -1,3 +1,6 @@
+"""
+This script performs Student t-test on the perplexity distribution of two sentences groups with contrasting targets
+"""
 import pandas as pd
 import numpy as np
 from scipy import stats
@@ -12,6 +15,21 @@ from outliers import smirnov_grubbs as grubbs
 
 
 def get_perplexity_list(df, m, t):
+    """
+    Gets perplexities of all sentences in a DataFrame based on given model
+    Parameters
+    ----------
+    df : pd.DataFrame
+    DataFrame with Reddit comments
+    m : model
+    Pre-trained language model
+    t : tokenizer
+    Pre-trained tokenizer for the given model
+
+    Returns
+    -------
+    List of sentence perplexities
+    """
     perplexity_list = []
     for idx, row in df.iterrows():
         try:
@@ -24,6 +42,21 @@ def get_perplexity_list(df, m, t):
 
 
 def get_perplexity_list_test(df, m, t, dem):
+    """
+    Gets perplexities of all sentences in a DataFrame(contains 2 columns of contrasting sentences) based on given model
+    Parameters
+    ----------
+    df : pd.DataFrame
+    DataFrame with Reddit comments in 2 columns
+    m : model
+    Pre-trained language model
+    t : tokenizer
+    Pre-trained tokenizer for the given model
+
+    Returns
+    -------
+    List of sentence perplexities
+    """
     perplexity_list = []
     for idx, row in df.iterrows():
         try:
@@ -38,11 +71,37 @@ def get_perplexity_list_test(df, m, t, dem):
 
 
 def get_model_perplexity(df, m, t):
+    """
+    Finds model perplexity based on average model loss over all sentences
+    Parameters
+    ----------
+    df : pd.DataFrame
+    DataFrame with Reddit comments
+    m : model
+    Pre-trained language model
+    t : tokenizer
+    Pre-trained tokenizer for the given model
+
+    Returns
+    -------
+    Model perplexity
+    """
     model_perplexity = helpers.model_perplexity(df['comments_processed'], m, t)
     return model_perplexity
 
 
 def find_anomalies(data):
+    """
+    Find outliers in a given data distribution
+    Parameters
+    ----------
+    data : list
+    List of sentence perplexities
+
+    Returns
+    -------
+    List of outliers
+    """
     anomalies = []
 
     random_data_std = np.std(data)
@@ -95,8 +154,6 @@ if GET_PERPLEXITY:
     race_df = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + input_file_suffix + '.csv')
     race_df_2 = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_2 + input_file_suffix + '.csv')
 
-    # race_df = race_df.dropna()
-    # race_df_2 = race_df_2.dropna()
      # 'gpt2' # 'roberta-base' # 'bert-base-uncased' #  #'ctrl'
     # "microsoft/DialoGPT-small" # 'ctrl' # 'openai-gpt' # 'minimaxir/reddit' # 'xlnet-large-cased'
     # pretrained_model = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/colab_outputs/religion1/eq_loss/'
@@ -141,27 +198,8 @@ logging.debug('Mean and variance of unfiltered perplexities demo2 - Mean {}, Var
 print('Mean and std of unfiltered perplexities demo1 - Mean {}, Std {}'.format(np.mean(race_1_perplexity), np.std(race_1_perplexity)))
 print('Mean and std of unfiltered perplexities demo2 - Mean {}, Std {}'.format(np.mean(race_2_perplexity), np.std(race_2_perplexity)))
 
-# sns.distplot(race_1_perplexity, hist=True, kde=True)
-# sns.distplot(race_2_perplexity, hist=True, kde=True)
-# plt.show()
 
 print(len(race_1_perplexity), len(race_2_perplexity))
-
-# data = grubbs.test(diff, alpha=.05)
-# # print('inliers {}'.format(data))
-#
-# demo1_intlier = grubbs.test(race_1_perplexity, alpha=0.0001)
-# demo2_intlier = grubbs.test(race_2_perplexity, alpha=0.0001)
-#
-# demo1_outlier = [d1 for d1 in race_1_perplexity if d1 not in demo1_intlier]
-# demo2_outlier = [d2 for d2 in race_2_perplexity if d2 not in demo2_intlier]
-#
-# all_samples = race_1_perplexity + race_2_perplexity
-# all_s_i = grubbs.test(all_samples, alpha=0.0001)
-# all_s_o = [d2 for d2 in all_samples if d2 not in all_s_i]
-# print('demo1_outlier {}'.format(demo1_outlier))
-# print('demo2_outlier {}'.format(demo2_outlier))
-# print('all samples outlier {}'.format(all_s_o))
 
 demo1_out = find_anomalies(np.array(race_1_perplexity))
 demo2_out = find_anomalies(np.array(race_2_perplexity))

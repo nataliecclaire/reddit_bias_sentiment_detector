@@ -1,3 +1,6 @@
+"""
+This script performs Student t-test on the perplexity distribution of two sentences groups with contrasting targets
+"""
 import pandas as pd
 import numpy as np
 from scipy import stats
@@ -12,6 +15,21 @@ import math
 
 
 def perplexity_score(sentence, m, t):
+    """
+    Finds perplexity score of a sentence based on model
+    Parameters
+    ----------
+    sentence : str
+    Given sentence
+    m : model
+    Pre-trained language model
+    t : tokenizer
+    Pre-trained tokenizer
+
+    Returns
+    -------
+    Perplexity score
+    """
     with torch.no_grad():
         m.eval()
         tokenize_input = t.tokenize(sentence)
@@ -21,6 +39,21 @@ def perplexity_score(sentence, m, t):
 
 
 def model_perplexity(sentences, m, t):
+    """
+    Finds model perplexity based on average model loss over all sentences
+    Parameters
+    ----------
+    sentences : list
+    sentence set
+    m : model
+    Pre-trained language model
+    t : tokenizer
+    Pre-trained tokenizer
+
+    Returns
+    -------
+    Model perplexity score
+    """
     total_loss = 0
     for sent in sentences:
         with torch.no_grad():
@@ -33,6 +66,21 @@ def model_perplexity(sentences, m, t):
 
 
 def get_perplexity_list(df, m, t):
+    """
+        Gets perplexities of all sentences in a DataFrame based on given model
+        Parameters
+        ----------
+        df : pd.DataFrame
+        DataFrame with Reddit comments
+        m : model
+        Pre-trained language model
+        t : tokenizer
+        Pre-trained tokenizer for the given model
+
+        Returns
+        -------
+        List of sentence perplexities
+    """
     perplexity_list = []
     for idx, row in df.iterrows():
         try:
@@ -45,6 +93,21 @@ def get_perplexity_list(df, m, t):
 
 
 def get_perplexity_list_test(df, m, t, dem):
+    """
+    Gets perplexities of all sentences in a DataFrame(contains 2 columns of contrasting sentences) based on given model
+    Parameters
+    ----------
+    df : pd.DataFrame
+    DataFrame with Reddit comments in 2 columns
+    m : model
+    Pre-trained language model
+    t : tokenizer
+    Pre-trained tokenizer for the given model
+
+    Returns
+    -------
+    List of sentence perplexities
+    """
     perplexity_list = []
     for idx, row in df.iterrows():
         try:
@@ -59,11 +122,37 @@ def get_perplexity_list_test(df, m, t, dem):
 
 
 def get_model_perplexity(df, m, t):
+    """
+    Finds model perplexity based on average model loss over all sentences
+    Parameters
+    ----------
+    df : pd.DataFrame
+    DataFrame with Reddit comments
+    m : model
+    Pre-trained language model
+    t : tokenizer
+    Pre-trained tokenizer for the given model
+
+    Returns
+    -------
+    Model perplexity
+    """
     model_perp = model_perplexity(df['comments_processed'], m, t)
     return model_perp
 
 
 def find_outliers(data):
+    """
+    Find outliers in a given data distribution
+    Parameters
+    ----------
+    data : list
+    List of sentence perplexities
+
+    Returns
+    -------
+    List of outliers
+    """
     anomalies = []
 
     random_data_std = np.std(data)

@@ -1,3 +1,6 @@
+"""
+This script pre-processes Hate speech dataset by Davidson et al.
+"""
 import pandas as pd
 import re
 import time

@@ -1,3 +1,8 @@
+"""
+This script processes the raw Reddit comments for Target group 1(from reddit_data.py) and further creates Counter Target
+dataset containing target group term replaced with Target group 2 terms. In case of demographic - Gender and
+Sexual orientation, Reddit comments with only one Target group mention are retained.
+"""
 import pandas as pd
 import re
 from utils import reddit_helpers as rh
@@ -11,6 +16,7 @@ if __name__ == '__main__':
     demo_2 = 'straight' # 'male' # 'white_pos' # 'christians' #  # 'white'
     PROCESS_DEMO1 = True
 
+    # Process Reddit comments in all raw files and store in processed file for Target group 1
     if PROCESS_DEMO1:
         print('Processing demo1 reddit files...')
         colNames = ('id', 'comments', 'comments_processed')
@@ -49,7 +55,7 @@ if __name__ == '__main__':
 
         demo1_df_processed.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + '_processed' + '.csv', index=False)
 
-    # If demo is gender or orientation retain sentences with only one target word
+    # If demo is gender or orientation retain sentences with only one target group term
     if demo == 'gender':
         colNames = ('id', 'comments_processed')
         demo2_df = pd.DataFrame(columns=colNames)
@@ -93,6 +99,7 @@ if __name__ == '__main__':
         demo1_df_processed = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + '_processed' + '.csv')
         print('Shape of demo1 data {}'.format(demo1_df_processed.shape))
 
+    # Create Counter target data set
     demo2_df = pd.DataFrame(columns=['initial_demo', 'replaced_demo', 'comments', 'comments_processed'])
 
     if demo == 'race':

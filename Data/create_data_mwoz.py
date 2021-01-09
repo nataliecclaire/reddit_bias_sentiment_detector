@@ -16,7 +16,7 @@ np.set_printoptions(precision=3)
 np.random.seed(2)
 
 '''
-Most of the codes are from https://github.com/budzianowski/multiwoz
+This code is taken from https://github.com/jasonwu0731/trade-dst/blob/master/create_data.py
 '''
 
 # GLOBAL VARIABLES

@@ -1,3 +1,6 @@
+"""
+This script extracts Reddit phrases manually annotated as Biased and corresponding generates Counter target dataset
+"""
 import pandas as pd
 import re
 from utils import reddit_helpers as rh

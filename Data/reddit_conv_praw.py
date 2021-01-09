@@ -1,3 +1,6 @@
+"""
+This script extracts Reddit conversation like comment threads using PRAW API
+"""
 import time
 import praw
 import json
@@ -10,6 +13,17 @@ from utils import reddit_helpers as rh
 
 
 def get_comment_thread_id(submission):
+    """
+    Creates reddit conversation threads from the submission
+    Parameters
+    ----------
+    submission : object
+    Submission object from Reddit
+
+    Returns
+    -------
+    List of Conversation like comment IDs from Reddit submissions
+    """
     comment_stack = submission.comments[:]
     # print(comment_stack)
     submission.comments.replace_more(limit=None)
@@ -43,6 +57,21 @@ def get_comment_thread_id(submission):
 
 
 def get_comment_thread_sent(comment_thread, subm):
+    """
+    Extracts comment body for given comment IDs thread
+    Parameters
+    ----------
+    comment_thread : list
+    List of conversation like threads with comment IDs
+    subm : object
+    Reddit submission object
+
+    Returns
+    -------
+    List of comment threads with Reddit comments
+    List of comment threads with Reddit comment IDs
+
+    """
     list_comment_threads = []
     list_comment_ids = []
     for c in comment_thread:
@@ -63,6 +92,23 @@ def get_comment_thread_sent(comment_thread, subm):
 
 
 def get_comment_thread_timeinterval(t_loops, reddit, query, subreddit):
+    """
+    Retrieves Reddit submissions based on query and subreddit tag over a time period and extracts conversation like
+    threads from each comment
+    Parameters
+    ----------
+    t_loops : int
+    Specifies number of times to loop
+    reddit : object
+    Reddit PRAW object
+    query : str
+    Demographic target group term/phrase
+    subreddit : str
+    Subreddit name / tag
+
+    Updates global variable: comment_id_threads_dict_new with conversation threads over all retrieved submissions
+
+    """
 
     global comment_id_threads_dict, comment_id_threads_dict_new
 

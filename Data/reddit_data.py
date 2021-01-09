@@ -1,3 +1,6 @@
+"""
+This script retrieves raw Reddit comments for a specified demographic over a specified period
+"""
 import json
 import requests
 import pandas as pd
@@ -17,6 +20,18 @@ from utils import reddit_helpers as rh
 
 
 def get_reddit_comments(qd):
+    """
+    Get Reddit comments with demographic target group term/phrase match in 'qd' and attribute 'qf' for a period of 30
+    days in each loop, and loop for 'chunks' number of times.
+
+    Parameters
+    ----------
+    qd : list
+    List of Target group 1 terms/phrases of a demographic(Ex: Jews in Religion1 demographic)
+
+    The global variable 'comments_dict' is updated with key as comment ID and value as Comment body
+
+    """
     global comments_dict
     for qf in query_feature:
         before = int(time.time())
@@ -30,19 +45,6 @@ def get_reddit_comments(qd):
                 for idx, com in enumerate(red_comments):
                     # if len(com['body']) <= length:
                     comments_dict[com['id']] = com['body']
-                        # print(com['body'])
-                        # print(len(com['body']))
-                        # comments_df.at[i, 'comments'] = com['body']
-                        # comments_df.at[i, 'id'] = com['id']
-                        # comments_df.at[i, 'created_utc'] = com['created_utc']
-                        # i += 1
-
-                        # if "comments" in comments_dict:
-                        #     comments_dict["comments"].append(com['body'])
-                        # else:
-                        #     comments_dict["comments"] = com['body']
-
-                        # comments_dict.setdefault("comments", []).append(com['body'])
                 before = after
             except Exception as e:
                 print('Exception observed: {}'.format(repr(e)))
@@ -82,13 +84,8 @@ if __name__ == '__main__':
             pool.map(get_reddit_comments, query_demo_4)
 
         # print(comments_dict)
-        # comments_dict = dict(comments_dict)
-        # print('Comments dict chunk is:')
-        # print(comments_dict)
 
         comments_df = pd.DataFrame(list(comments_dict.items()), columns=['id', 'comments'])
-        # print(type(red_comments))
-        # comments_df['comments_processed'] = comments_df['comments'].apply(lambda sent: process_reddit(sent))
         comments_df.to_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + '_raw_' + str(i) + '.csv')
 
         print('Total time for code execution: {} of iteration {}'.format((time.time() - start)/60, i))

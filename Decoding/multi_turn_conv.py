@@ -1,3 +1,6 @@
+"""
+This script generates model responses in a conversational setting
+"""
 from transformers import AutoModelWithLMHead, AutoTokenizer
 import torch
 

@@ -4,6 +4,21 @@ import re
 
 
 def perplexity_score(sentence, model, tokenizer):
+    """
+    Finds perplexity score of a sentence based on model
+    Parameters
+    ----------
+    sentence : str
+    Given sentence
+    model :
+    Pre-trained language model
+    tokenizer :
+    Pre-trained tokenizer
+
+    Returns
+    -------
+    Perplexity score
+    """
     with torch.no_grad():
         model.eval()
         tokenize_input = tokenizer.tokenize(sentence)
@@ -13,6 +28,21 @@ def perplexity_score(sentence, model, tokenizer):
 
 
 def model_perplexity(sentences, model, tokenizer):
+    """
+     Finds model perplexity based on average model loss over all sentences
+     Parameters
+     ----------
+     sentences : list
+     sentence set
+     model :
+     Pre-trained language model
+     tokenizer :
+     Pre-trained tokenizer
+
+     Returns
+     -------
+     Model perplexity score
+     """
     total_loss = 0
     for sent in sentences:
         with torch.no_grad():
@@ -25,8 +55,17 @@ def model_perplexity(sentences, model, tokenizer):
 
 
 def process_tweet(sent):
-    # special cases - 15959
-    # print(sent)
+    """
+    Pre-processes a given sentence
+    Parameters
+    ----------
+    sent : str
+    Given sentence
+
+    Returns
+    -------
+    Processed sentence
+    """
     sent = sent.encode("ascii", errors="ignore").decode() # check this output
     # print(sent)
     sent = re.sub('@[^\s]+', '', sent)

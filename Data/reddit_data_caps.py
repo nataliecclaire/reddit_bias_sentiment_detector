@@ -1,3 +1,6 @@
+"""
+This script lowercased Muslim related target terms with uppercase in first character
+"""
 import pandas as pd
 
 

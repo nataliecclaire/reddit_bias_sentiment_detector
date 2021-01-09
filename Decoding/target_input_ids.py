@@ -1,6 +1,6 @@
-import torch
-import pandas as pd
-import math
+"""
+This script tokenizes the target group terms/phrases
+"""
 import time
 from transformers import AutoModelWithLMHead, AutoTokenizer
 

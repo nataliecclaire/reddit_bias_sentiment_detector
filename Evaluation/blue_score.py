@@ -1,3 +1,6 @@
+"""
+This script calculates corpus BLEU score for generated responses w.r.t DSTC7 reference set
+"""
 import nltk
 from nltk.translate.bleu_score import SmoothingFunction
 import argparse

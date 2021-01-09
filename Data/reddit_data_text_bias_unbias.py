@@ -1,8 +1,20 @@
+"""
+This script generates text files of train and test datasets of Counter attribute data augmentation
+"""
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
 
 def build_dataset_manual_annot(df, dest_path):
+    """
+      Writes data from Dataframe to a text file, each dataframe row line by line in text file appending BOS and EOS token
+      Parameters
+      ----------
+      df : pd.DataFrame
+      Dataframe of biased reddit phrases
+      dest_path : str
+      Path to store text file
+    """
     f = open(dest_path, 'w')
     data = ''
 

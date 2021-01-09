@@ -1,3 +1,7 @@
+"""
+This script generates phrases from processed Reddit comments such that each phrase is maximum length of 15 and
+contains target group term and attribute term
+"""
 import pandas as pd
 import random
 import re
@@ -15,7 +19,8 @@ print(demo1_df_processed.shape)
 targets = []
 attributes = []
 
-
+# Since targets in 'demo_opposites.txt'(ex: race_opposites.txt) are phrases('africans are'), here the targets are
+# listed separately
 if demo == 'race':
     targets = ['black', 'blacks', 'african', 'africans', 'afro-americans', 'negroes', 'dark-skinned', 'african-americans']
     with open(data_path + demo + '/' + demo + '_' + demo_1 + '.txt') as f:
@@ -45,7 +50,6 @@ elif demo == 'orientation':
     print(attributes)
 
 data_list = []
-# demo1_df_processed = demo1_df_processed[3377:3390]
 
 for idx, row in demo1_df_processed.iterrows():
     row_dict = {}
@@ -76,6 +80,8 @@ for idx, row in demo1_df_processed.iterrows():
 
             # print(target_index1, target_index2)
 
+            # If the sentence has two mentions of target group term, select the phrase(cropped sentence) that contains
+            # attribute term
             for target_index in [target_index1, target_index2]:
 
                 if target_index is not None:
@@ -86,6 +92,7 @@ for idx, row in demo1_df_processed.iterrows():
                     phrase_list = sent_list[left_window:right_window]
                     phrase_joined = ' '.join(phrase_list)
 
+                    # Extract the phrase if any of thr pre-defined attributes are in it
                     if any(attr.lower() in phrase_joined for attr in attributes):
                         row_dict['id'] = row['id']
                         row_dict['attribute_in_window'] = True
@@ -100,13 +107,11 @@ for idx, row in demo1_df_processed.iterrows():
             row_dict['comment'] = row['comments_processed']
             row_dict['phrase'] = phrase_joined
             data_list.append(row_dict)
-            # print('false')
 
     except Exception as ex:
         pass
 
 
-# print(data_list)
 data_df = pd.DataFrame(data_list)
 print(data_df.shape)
 data_df = data_df.drop_duplicates(subset=['phrase'])

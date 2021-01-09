@@ -1,4 +1,6 @@
-
+"""
+This script removes the token __UNDISCLOSED__ from DSTC7 testset
+"""
 read_file_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/dstc7/test_convos.txt'
 write_file_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/dstc7/test_convos_processed.txt'
 

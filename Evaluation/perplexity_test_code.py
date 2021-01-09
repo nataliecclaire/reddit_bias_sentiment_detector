@@ -1,3 +1,6 @@
+"""
+This script gets perplexity of given sentences based on a given model
+"""
 from utils import helper_functions as hf
 from transformers import AutoModelWithLMHead, AutoTokenizer
 import torch

@@ -1,3 +1,6 @@
+"""
+This script generates Counter attribute dataset for train and test set split
+"""
 import pandas as pd
 import re
 from utils import reddit_helpers as rh

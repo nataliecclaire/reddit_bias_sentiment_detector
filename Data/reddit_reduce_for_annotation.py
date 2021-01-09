@@ -1,11 +1,15 @@
+"""
+In this script, phrases with attributes related to career and interests are retained from the earlier extracted
+Reddit phrases for demographic Gender
+"""
 import pandas as pd
 import re
 import numpy
 import numpy as np
 
 data_path = '/Users/soumya/Documents/Mannheim-Data-Science/Sem_4/MasterThesis/Data/'
-demo = 'gender' # 'race' # 'religion2' # 'religion1' # 'gender' #  # 'race'
-demo_1 = 'female' # 'black' # 'muslims' # 'jews' # 'black_pos' # 'female'  # 'jews'
+demo = 'gender'
+demo_1 = 'female'
 
 demo1_processed_phrase = pd.read_csv(data_path + demo + '/' + 'reddit_comments_' + demo + '_' + demo_1 + '_processed_phrase' + '.csv')
 print(demo1_processed_phrase.shape)

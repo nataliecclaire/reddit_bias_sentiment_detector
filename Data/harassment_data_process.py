@@ -1,3 +1,6 @@
+"""
+This script pre-processes Harassment dataset by Golbeck et al.
+"""
 import pandas as pd
 import re
 import time

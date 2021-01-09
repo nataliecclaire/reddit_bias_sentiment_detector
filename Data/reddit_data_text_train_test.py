@@ -1,8 +1,23 @@
+"""
+This script generates csv and text files of train and test split for biased reddit dataset
+"""
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
 
 def build_dataset_bos_eos(df, demo, dest_path):
+    """
+    Writes data from Dataframe to a text file, each dataframe row line by line in text file appending BOS and EOS token
+    Parameters
+    ----------
+    df : pd.DataFrame
+    Dataframe of biased reddit phrases
+    demo : str
+    Demographic name
+    dest_path : str
+    Path to store text file
+
+    """
     f = open(dest_path, 'w')
     data = ''
 
@@ -16,6 +31,18 @@ def build_dataset_bos_eos(df, demo, dest_path):
 
 
 def build_dataset_manual_annot(df, demo, dest_path):
+    """
+    Writes data from Dataframe to a text file, each dataframe row line by line in text file
+    Parameters
+    ----------
+    df : pd.DataFrame
+    Dataframe of biased reddit phrases
+    demo : str
+    Demographic name
+    dest_path : str
+    Path to store text file
+
+    """
     f = open(dest_path, 'w')
     data = ''
 

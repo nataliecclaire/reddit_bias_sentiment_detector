@@ -1,3 +1,6 @@
+"""
+This script tokenizes the attribute words/phrases
+"""
 import re
 from transformers import AutoModelWithLMHead, AutoTokenizer
 
