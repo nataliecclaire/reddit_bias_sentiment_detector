@@ -19,8 +19,8 @@ them.
 - DataPreparation/reddit_data_phrases_replace_attribute.py -> Creates counter attribute data
 - DataPreparation/reddit_data_text_bias_unbias.py -> Creates test files of counter attribute augmented data
 
-The data generated as part of this is found in data/ and text_files/ directories. The raw reddit comment files 
-cannot be uploaded to GitHub due to size constraints.
+The data generated as part of this is found in data/ and text_files/ directories. The unprocessed reddit comment files 
+could not be uploaded to GitHub due to size constraints. Find it on https://drive.google.com/drive/folders/1FC79WZyuVJRGXf4OzGoX4z84wvwhBxgh?usp=sharing
 
 ### Significance test evaluation
 
