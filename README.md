@@ -1,4 +1,4 @@
-# MasterThesis
+# RedditBias
 
 ### Data Preparation
 The data preparation code is included in the directory - DataPreparation
