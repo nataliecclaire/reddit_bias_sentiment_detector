@@ -42,4 +42,4 @@ Unset variable ''REDUCE_SET' if you are already using reduced test set for input
  
  ### Debiasing code
  
- Find the code for debiasing and evaluation of debiased model in forked repo: https://github.com/SoumyaBarikeri/debias_transformers
+ Find the code for Algorithm level and Data level debiasing and evaluation (Dialog State Tracking & Response Generation) of debiased model in forked repo: https://github.com/SoumyaBarikeri/debias_transformers
