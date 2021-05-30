@@ -40,3 +40,6 @@ Unset variable ''REDUCE_SET' if you are already using reduced test set for input
 - Decoding/target_input_ids.py -> Creates token ids of target words
 
  
+ ### Debiasing code
+ 
+ Find the code for debiasing and evaluation of debiased model in forked repo: https://github.com/SoumyaBarikeri/debias_transformers
