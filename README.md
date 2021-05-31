@@ -42,17 +42,13 @@ The data generated as part of this is found in data/demographic and text_files/d
 
 **Note:** The unprocessed reddit comment files could not be uploaded to GitHub due to size constraints. Find it on https://drive.google.com/drive/folders/1FC79WZyuVJRGXf4OzGoX4z84wvwhBxgh?usp=sharing
 
-### Significance test evaluation
+### Language Model Bias (Significance test Bias evaluation)
 
 - Evaluation/measure_bias.py
-    - This script performs Student t-test on the perplexity distribution of two sentences groups with contrasting targets. For example works on files: **reddit_comments_religion2_christians_biased_test_reduced.csv** and **reddit_comments_religion2_muslims_biased_test_reduced.csv**
-    Set variable 'REDUCE_SET' to remove outliers from target set
-    Unset variable ''REDUCE_SET' if you are already using reduced test set for input
+    - This script performs Student t-test on the perplexity distribution of two sentences groups with contrasting targets. For example works on files: **reddit_comments_religion2_christians_biased_test_reduced.csv** and **reddit_comments_religion2_muslims_biased_test_reduced.csv**. Set variable 'REDUCE_SET' to remove outliers from target set. Unset variable ''REDUCE_SET' if you are already using reduced test set for input
 
 - Evaluation/measure_bias_attribute_swap.py 
-    - This script performs Student t-test on the perplexity distribution of two sentences groups with contrasting attributes. For example works on files: **reddit_comments_religion2_muslims_processed_phrase_unbiased_testset_pos_attr_reduced.csv** and **reddit_comments_religion2_muslims_processed_phrase_biased_testset_neg_attr_reduced.csv**
-    Set variable 'REDUCE_SET' to remove outliers from target set
-    Unset variable ''REDUCE_SET' if you are already using reduced test set for input
+    - This script performs Student t-test on the perplexity distribution of two sentences groups with contrasting attributes. For example works on files: **reddit_comments_religion2_muslims_processed_phrase_unbiased_testset_pos_attr_reduced.csv** and **reddit_comments_religion2_muslims_processed_phrase_biased_testset_neg_attr_reduced.csv**. Set variable 'REDUCE_SET' to remove outliers from target set. Unset variable ''REDUCE_SET' if you are already using reduced test set for input
 
 
 ### Generate response from models
@@ -62,6 +58,6 @@ The data generated as part of this is found in data/demographic and text_files/d
 - Decoding/target_input_ids.py -> Creates token ids of target words
 
  
- ### Debiasing code
+ ### Debiasing code and Performance in Conversational tasks
  
  Find the code for Algorithm level and Data level debiasing and evaluation (Dialog State Tracking & Response Generation) of debiased model in forked repo: https://github.com/SoumyaBarikeri/debias_transformers
