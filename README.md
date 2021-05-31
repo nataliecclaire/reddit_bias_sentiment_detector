@@ -27,6 +27,10 @@ The data generated as part of this is found in data/demographic and text_files/d
 - **reddit_comments_religion2_muslims_processed.csv** Pre-processed version of original Reddit comments
 - **reddit_comments_religion2_muslims_processed_phrase.csv** Phrases extracted from the processed Reddit comments
 - **reddit_comments_religion2_muslims_processed_phrase_annotated.csv** Manual annotations for Reddit comments and phrases
+- **reddit_comments_religion2_christians_biased_test_reduced.csv** and **reddit_comments_religion2_muslims_biased_test_reduced.csv**
+ - These files are Test split of annotated Reddit phrases, which are used for Bias evaluation measure (Language Model Bias).
+- **reddit_comments_religion2_christians_biased_valid_reduced.csv** and **reddit_comments_religion2_muslims_biased_valid_reduced.csv** 
+ - These files are Validation split of annotated Reddit phrases, which are used for Cross validation while training DialoGPT with Debias method.
 
 **Note:** The unprocessed reddit comment files could not be uploaded to GitHub due to size constraints. Find it on https://drive.google.com/drive/folders/1FC79WZyuVJRGXf4OzGoX4z84wvwhBxgh?usp=sharing
 
