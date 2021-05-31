@@ -1,5 +1,13 @@
 # RedditBias
 
+This repository contains the code and data for bias evaluation with *RedditBias* (to appear at ACL21).  The code for the debiasing approaches and the conversational downstream evaluation can be found here: https://github.com/umanlp/redditbias_debias_conv_ai.
+
+## Privacy & Ethics
+RedditBias is created from real-world conversations. To protect the users whose comments are included in our data set, we have removed all identifying information, e.g., user names, and kept only the text needed for our analysis. However, if you find your text in our data set and you feel misrepresented being included in this data set, please reach out to us with the following information: comment to be removed & reddit username. Thank you!
+
+## How to Use this Code
+For bias evaluation with RedditBias, please use Evaluation/measure_bias.py. The rest of the code you can find in this repository documents the data set creation and offers other useful functions.
+
 ### Data Preparation
 The data preparation code is included in the directory - DataPreparation
 
@@ -58,8 +66,3 @@ A brief description of files in data/religion1 is:
 - Decoding/generate.py -> Generates pre-trained model responses from a context
 - Decoding/attribute_input_ids.py -> Creates token ids of attribute words
 - Decoding/target_input_ids.py -> Creates token ids of target words
-
- 
- ### Debiasing code and Performance in Conversational tasks
- 
- Find the code for Algorithm level and Data level debiasing and evaluation (Dialog State Tracking & Response Generation) of debiased model in forked repo: https://github.com/SoumyaBarikeri/debias_transformers
