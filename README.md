@@ -37,18 +37,22 @@ The data generated as part of this is found in data/demographic and text_files/d
     - These files are Test split of annotated Reddit phrases, which are used for Bias evaluation measure (Language Model Bias).
 - **reddit_comments_religion2_christians_biased_valid_reduced.csv** and **reddit_comments_religion2_muslims_biased_valid_reduced.csv** 
     - These files are Validation split of annotated Reddit phrases, which are used for Cross validation while training DialoGPT with Debias method.
+- **reddit_comments_religion2_muslims_processed_phrase_biased_testset_neg_attr_reduced.csv** and **reddit_comments_religion2_muslims_processed_phrase_biased_testset_pos_attr_reduced.csv**
+    - These files are test split of Reddit phrases used for Bias evaluation over contrasting Attributes for marginalised demographic.
 
 **Note:** The unprocessed reddit comment files could not be uploaded to GitHub due to size constraints. Find it on https://drive.google.com/drive/folders/1FC79WZyuVJRGXf4OzGoX4z84wvwhBxgh?usp=sharing
 
 ### Significance test evaluation
 
-- Evaluation/measure_bias.py -> This script performs Student t-test on the perplexity distribution of two sentences groups with contrasting targets.
-Set variable 'REDUCE_SET' to remove outliers from target set
-Unset variable ''REDUCE_SET' if you are already using reduced test set for input
+- Evaluation/measure_bias.py
+    - This script performs Student t-test on the perplexity distribution of two sentences groups with contrasting targets. For example works on files: **reddit_comments_religion2_christians_biased_test_reduced.csv** and **reddit_comments_religion2_muslims_biased_test_reduced.csv**
+    Set variable 'REDUCE_SET' to remove outliers from target set
+    Unset variable ''REDUCE_SET' if you are already using reduced test set for input
 
-- Evaluation/measure_bias_attribute_swap.py -> This script performs Student t-test on the perplexity distribution of two sentences groups with contrasting attributes
-Set variable 'REDUCE_SET' to remove outliers from target set
-Unset variable ''REDUCE_SET' if you are already using reduced test set for input
+- Evaluation/measure_bias_attribute_swap.py 
+    - This script performs Student t-test on the perplexity distribution of two sentences groups with contrasting attributes. For example works on files: **reddit_comments_religion2_muslims_processed_phrase_unbiased_testset_pos_attr_reduced.csv** and **reddit_comments_religion2_muslims_processed_phrase_biased_testset_neg_attr_reduced.csv**
+    Set variable 'REDUCE_SET' to remove outliers from target set
+    Unset variable ''REDUCE_SET' if you are already using reduced test set for input
 
 
 ### Generate response from models
