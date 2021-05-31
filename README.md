@@ -6,7 +6,7 @@ The data preparation code is included in the directory - DataPreparation
 The following scripts should be run sequentially to finally generate data required to debias(fine-tuning) models and evaluate 
 them.
 
-- DataPreparation/reddit_data.py -> Retrieves raw reddit comments using query match 
+* DataPreparation/reddit_data.py -> Retrieves raw reddit comments using query match 
 (Target group words and attribute words)
 - DataPreparation/reddit_data_process -> Processes the retrieved comments
 - DataPreparation/reddit_data_phrases -> Generates phrases from processed Reddit comments
