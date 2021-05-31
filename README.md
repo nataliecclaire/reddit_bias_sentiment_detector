@@ -19,7 +19,9 @@ them.
 - DataPreparation/reddit_data_phrases_replace_attribute.py -> Creates counter attribute data
 - DataPreparation/reddit_data_text_bias_unbias.py -> Creates test files of counter attribute augmented data
 
-The data generated as part of this is found in data/demographic and text_files/demographic directories, where 'demographic' is gender, orientation, race, religion1 or religion2. A brief description of files in data/religion1 is:
+The data generated as part of this is found in data/demographic and text_files/demographic directories, where 'demographic' is gender, orientation, race, religion1 or religion2. The txt files in folder text_files/ are used for train, validation and evaluation during fine-tuning the DialoGPT model using Debiasing methods.
+
+A brief description of files in data/religion1 is:
 
 - **religion2_muslims.txt** 
     - This file contains Attribute set #1 (stereotypical negative descriptors for Target group Muslims)
