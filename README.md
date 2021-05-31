@@ -6,7 +6,7 @@ The data preparation code is included in the directory - DataPreparation
 The following scripts should be run sequentially to finally generate data required to debias(fine-tuning) models and evaluate 
 them.
 
-* DataPreparation/reddit_data.py -> Retrieves raw reddit comments using query match 
+- DataPreparation/reddit_data.py -> Retrieves raw reddit comments using query match 
 (Target group words and attribute words)
 - DataPreparation/reddit_data_process -> Processes the retrieved comments
 - DataPreparation/reddit_data_phrases -> Generates phrases from processed Reddit comments
@@ -19,8 +19,16 @@ them.
 - DataPreparation/reddit_data_phrases_replace_attribute.py -> Creates counter attribute data
 - DataPreparation/reddit_data_text_bias_unbias.py -> Creates test files of counter attribute augmented data
 
-The data generated as part of this is found in data/ and text_files/ directories. The unprocessed reddit comment files 
-could not be uploaded to GitHub due to size constraints. Find it on https://drive.google.com/drive/folders/1FC79WZyuVJRGXf4OzGoX4z84wvwhBxgh?usp=sharing
+The data generated as part of this is found in data/demographic and text_files/demographic directories, where 'demographic' is gender, orientation, race, religion1 or religion2. A brief description of files in data/religion1 is:
+
+- **religion2_muslims.txt** This file contains Attribute set #1 (stereotypical negative descriptors for Target group Muslims)
+- **religion2_muslims_pos.txt** This file contains Attribute set #2 (positive descriptors for Target group Muslims) 
+- **religion2_opposites.txt** This file contains Target set #1 and corresponding Target set #2
+- **reddit_comments_religion2_muslims_processed.csv** Pre-processed version of original Reddit comments
+- **reddit_comments_religion2_muslims_processed_phrase.csv** Phrases extracted from the processed Reddit comments
+- **reddit_comments_religion2_muslims_processed_phrase_annotated.csv** Manual annotations for Reddit comments and phrases
+
+**Note:** The unprocessed reddit comment files could not be uploaded to GitHub due to size constraints. Find it on https://drive.google.com/drive/folders/1FC79WZyuVJRGXf4OzGoX4z84wvwhBxgh?usp=sharing
 
 ### Significance test evaluation
 
