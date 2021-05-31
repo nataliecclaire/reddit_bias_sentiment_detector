@@ -21,12 +21,18 @@ them.
 
 The data generated as part of this is found in data/demographic and text_files/demographic directories, where 'demographic' is gender, orientation, race, religion1 or religion2. A brief description of files in data/religion1 is:
 
-- **religion2_muslims.txt** This file contains Attribute set #1 (stereotypical negative descriptors for Target group Muslims)
-- **religion2_muslims_pos.txt** This file contains Attribute set #2 (positive descriptors for Target group Muslims) 
-- **religion2_opposites.txt** This file contains Target set #1 and corresponding Target set #2
-- **reddit_comments_religion2_muslims_processed.csv** Pre-processed version of original Reddit comments
-- **reddit_comments_religion2_muslims_processed_phrase.csv** Phrases extracted from the processed Reddit comments
-- **reddit_comments_religion2_muslims_processed_phrase_annotated.csv** Manual annotations for Reddit comments and phrases
+- **religion2_muslims.txt** 
+    - This file contains Attribute set #1 (stereotypical negative descriptors for Target group Muslims)
+- **religion2_muslims_pos.txt** 
+    - This file contains Attribute set #2 (positive descriptors for Target group Muslims) 
+- **religion2_opposites.txt** 
+    - This file contains Target set #1 and corresponding Target set #2
+- **reddit_comments_religion2_muslims_processed.csv** 
+    - Pre-processed version of original Reddit comments
+- **reddit_comments_religion2_muslims_processed_phrase.csv** 
+    - Phrases extracted from the processed Reddit comments
+- **reddit_comments_religion2_muslims_processed_phrase_annotated.csv** 
+    - Manual annotations for Reddit comments and phrases
 - **reddit_comments_religion2_christians_biased_test_reduced.csv** and **reddit_comments_religion2_muslims_biased_test_reduced.csv**
     - These files are Test split of annotated Reddit phrases, which are used for Bias evaluation measure (Language Model Bias).
 - **reddit_comments_religion2_christians_biased_valid_reduced.csv** and **reddit_comments_religion2_muslims_biased_valid_reduced.csv** 
