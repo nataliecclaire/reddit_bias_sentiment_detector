@@ -131,7 +131,7 @@ REDUCE_SET = False # set to true to save dataset with outliers removed
 demo = 'religion1' # 'orientation' # 'gender' # 'religion2' # 'race' # 'religion2
 demo_1 = 'jews' # 'lgbtq' # 'female' # 'muslims' # 'black' # 'black_pos'
 demo_2 = 'christians' # 'straight' # 'male' # 'white' # 'white_pos'  # 'white' #'christians2'
-input_file_suffix = '_processed_phrase_biased_testset' #'_processed_phrase_biased_testset_reduced' # '_biased_test_reduced' # '_processed_phrase_biased' # '_processed_sent_biased' # '_processed'
+input_file_suffix = '_biased_test_reduced' #'_processed_phrase_biased_testset_reduced' #
 output_file_suffix = '_perplex_phrase_biased' # '_perplex'
 
 debiasing_head = 'EqualisingLoss' # 'CosineDist'
