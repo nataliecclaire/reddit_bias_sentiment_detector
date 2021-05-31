@@ -32,7 +32,7 @@ The data generated as part of this is found in data/demographic and text_files/d
 - **reddit_comments_religion2_muslims_processed_phrase.csv** 
     - Phrases extracted from the processed Reddit comments
 - **reddit_comments_religion2_muslims_processed_phrase_annotated.csv** 
-    - Manual annotations for Reddit comments and phrases
+    - Manual bias annotations for Reddit comments and phrases
 - **reddit_comments_religion2_christians_biased_test_reduced.csv** and **reddit_comments_religion2_muslims_biased_test_reduced.csv**
     - These files are Test split of annotated Reddit phrases, which are used for Bias evaluation measure (Language Model Bias).
 - **reddit_comments_religion2_christians_biased_valid_reduced.csv** and **reddit_comments_religion2_muslims_biased_valid_reduced.csv** 
