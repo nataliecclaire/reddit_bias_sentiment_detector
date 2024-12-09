@@ -1,3 +1,15 @@
+Welcome to our Github! We're team Meta 1A, a group of five women studying computer science and hoping to make a difference in the world through machine learning. In this project, we developed a BERT model that detects bias in the language of Reddit comments. By building this model, we hope to purge bias in language-based models by determining the quality of the datasets being fed into it. Below, you'll find the documentation from the original dataset we forked from @umanlp, who has collected the data for public use - thank you @umanlp!
+
+To run our model locally, there are a few steps:
+1. Click on the file labeled "final_reddit_bias.ipynb" In it, you'll find our Google Colab notebook containing our model.
+2. Click the "Download raw file" button in the top right of the notebook.
+3. Go to Google Colab or Kaggle and upload the file to a new notebook.
+4. Next, you'll need to download the data we used for the model. You can either download the entire dataset through the file "data." To do so, click on the file with two fingers, and some options should come up. Click the one that say "Download Linked File," and you should see all the data files in your recently downloaded. Note: This may look slightly different on a Windows laptop.
+5. Upload the file to your new notebook on Google Colab/Kaggle. You can upload the dataset on Google Colab by clicking on the file button to the left or on Kaggle using the input tab at the top.
+6. Run all the cells and watch the model work! Follow along with my descriptions to get a feel for how/why I'm doing each step.
+
+Feel free to look over the documentation from @umanlp for the technicalities on the data we used. Thanks for stopping by!
+
 # RedditBias
 
 This repository contains the code and data for bias evaluation with *RedditBias* (to appear at ACL21).  The code for the debiasing approaches and the conversational downstream evaluation can be found here: https://github.com/umanlp/redditbias_debias_conv_ai.
