@@ -6,7 +6,7 @@ To run our model locally, there are a few steps:
 3. Go to Google Colab or Kaggle and upload the file to a new notebook.
 4. Next, you'll need to download the data we used for the model. You can either download the entire dataset through the file "data." To do so, right click on the file, and some options should come up. Click the one that say "Download Linked File," and you should see all the data files in your recently downloaded. Note: This may look slightly different on a Windows laptop.
 5. Upload the file to your new notebook on Google Colab/Kaggle. You can upload the dataset on Google Colab by clicking on the file button to the left or on Kaggle using the input tab at the top.
-6. Run all the cells and watch the model work! Follow along with my descriptions to get a feel for how/why I'm doing each step.
+6. Run all the cells and watch the model work! Follow along with the descriptions to get a feel for how/why we're doing each step.
 
 Feel free to look over the documentation from @umanlp for the technicalities on the data we used. Thanks for stopping by!
 
