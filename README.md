@@ -4,7 +4,7 @@ To run our model locally, there are a few steps:
 1. Click on the file labeled "final_reddit_bias.ipynb" In it, you'll find our Google Colab notebook containing our model.
 2. Click the "Download raw file" button in the top right of the notebook.
 3. Go to Google Colab or Kaggle and upload the file to a new notebook.
-4. Next, you'll need to download the data we used for the model. You can either download the entire dataset through the file "data." To do so, click on the file with two fingers, and some options should come up. Click the one that say "Download Linked File," and you should see all the data files in your recently downloaded. Note: This may look slightly different on a Windows laptop.
+4. Next, you'll need to download the data we used for the model. You can either download the entire dataset through the file "data." To do so, right click on the file, and some options should come up. Click the one that say "Download Linked File," and you should see all the data files in your recently downloaded. Note: This may look slightly different on a Windows laptop.
 5. Upload the file to your new notebook on Google Colab/Kaggle. You can upload the dataset on Google Colab by clicking on the file button to the left or on Kaggle using the input tab at the top.
 6. Run all the cells and watch the model work! Follow along with my descriptions to get a feel for how/why I'm doing each step.
 
